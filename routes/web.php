@@ -41,3 +41,10 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::put('profile/password', ['as' => 'profile.password', 'uses' => 'ProfileController@password']);
 });
 
+Route::group(['middleware' => 'auth'], function () {
+	Route::get('product', ['as' => 'product.edit', 'uses' => 'ProductosController@edit']);
+    Route::put('product', ['as' => 'product.update', 'uses' => 'ProductosController@update']);
+    Route::get('product/search', ['as' => 'product.search', 'uses' => 'ProductosController@search']);
+	Route::put('product/password', ['as' => 'product.password', 'uses' => 'ProductosController@password']);
+});
+

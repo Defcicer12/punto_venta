@@ -18,7 +18,7 @@
                     <b class="caret mt-1"></b>
                 </a>
 
-                <div class="collapse show" id="laravel-examples">
+                <div class="collapse" id="laravel-examples">
                     <ul class="nav pl-4">
                         <li @if ($pageSlug == 'profile') class="active " @endif>
                             <a href="{{ route('profile.edit')  }}">
@@ -35,16 +35,34 @@
                     </ul>
                 </div>
             </li>
+            <li>
+                <a data-toggle="collapse" href="#Caja" aria-expanded="true">
+                    <i class="tim-icons icon-bag-16" ></i>
+                    <span class="nav-link-text" >{{ __('Cajero') }}</span>
+                    <b class="caret mt-1"></b>
+                </a>
+
+                <div class="collapse" id="Caja">
+                    <ul class="nav pl-4">
+                        <li @if ($pageSlug == 'caja') class="active " @endif>
+                            <a href="{{ route('pages.maps') }}">
+                                <i class="tim-icons icon-bank"></i>
+                                <p>{{ __('Caja') }}</p>
+                            </a>
+                        </li>
+                        <li @if ($pageSlug == 'maps') class="active " @endif>
+                            <a href="{{ route('pages.maps') }}">
+                                <i class="tim-icons icon-bank"></i>
+                                <p>{{ __('Caja') }}</p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
             <li @if ($pageSlug == 'icons') class="active " @endif>
                 <a href="{{ route('pages.icons') }}">
                     <i class="tim-icons icon-atom"></i>
                     <p>{{ __('Icons') }}</p>
-                </a>
-            </li>
-            <li @if ($pageSlug == 'maps') class="active " @endif>
-                <a href="{{ route('pages.maps') }}">
-                    <i class="tim-icons icon-pin"></i>
-                    <p>{{ __('Maps') }}</p>
                 </a>
             </li>
             <li @if ($pageSlug == 'notifications') class="active " @endif>

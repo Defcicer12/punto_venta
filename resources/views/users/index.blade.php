@@ -1,4 +1,4 @@
-@extends('layouts.app', ['page' => __('User Profile'), 'pageSlug' => 'users'])
+@extends('layouts.app', ['page' => __('Administración'), 'pageSlug' => 'users'])
 
 @section('content')
 <body class="">
@@ -12,7 +12,11 @@
                                     <div class="col-8">
                                         <h4 class="card-title">Users</h4>
                                     </div>
-                                    <div class="col-4 text-right">
+                                    <div class="col-2">
+                                        <button class="btn btn-sm btn-primary col-4" id="search-button" data-toggle="modal" data-target="#searchModal"><i class="tim-icons icon-zoom-split"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col">
                                         <a href="#" class="btn btn-sm btn-primary">Add user</a>
                                     </div>
                                 </div>
@@ -63,6 +67,18 @@
 
                                 </nav>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal modal-search fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="searchModal" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="{{ __('SEARCH') }}">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="{{ __('Close') }}">
+                                <i class="tim-icons icon-simple-remove"></i>
+                          </button>
                         </div>
                     </div>
                 </div>
