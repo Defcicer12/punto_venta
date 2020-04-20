@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Cliente;
 use App\Productos;
 
 class PageController extends Controller
@@ -24,7 +25,8 @@ class PageController extends Controller
     public function maps()
     {
         return view('pages.maps',[
-            'productos' => Productos::all()
+            'productos' => Productos::all(),
+            'clientes' => Cliente::all()
         ]);
     }
 

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Rules\Custom_email;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use PHPUnit\Util\Json;
 
 class ProductosController extends Controller
 {
@@ -108,7 +109,14 @@ class ProductosController extends Controller
         $q= $r->get('q');
         $productos = Productos::where('nombre','LIKE','%'.$q.'%')->get();
         if(count($productos) > 0)
-            return view('pages.maps',['productos' => $productos]);
+            return compact('productos');
         else return view ('pages.maps')->withMessage('No Details found. Try to search again !');
+    }
+
+    public function searchWithoutReload(Request $r)
+    {
+        $q= $r->get('q');
+        $productos = Productos::where('nombre','LIKE','%'.$q.'%')->get();
+        return view('pages.components.select-products-table',compact('productos'));
     }
 }

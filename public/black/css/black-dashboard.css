@@ -5889,6 +5889,7 @@ button.close {
   z-index: 1050;
   display: none;
   overflow: hidden;
+  background-color: #27293D;
   outline: 0;
 }
 
@@ -5897,6 +5898,7 @@ button.close {
   width: auto;
   margin: 0.5rem;
   pointer-events: none;
+  background-color: #27293D;
 }
 
 .modal.fade .modal-dialog {
@@ -5932,7 +5934,7 @@ button.close {
   flex-direction: column;
   width: 100%;
   pointer-events: auto;
-  background-color: black;
+  background-color: #27293D;
   background-clip: padding-box;
   border: 1px solid rgba(34, 42, 66, 0.2);
   border-radius: 0.2857rem;

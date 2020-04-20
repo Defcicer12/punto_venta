@@ -7,9 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class Venta_producto extends Model
 {
 
-    protected $table = 'producto';
-    protected $primaryKey = 'id';
-    protected $guarded = ['id'];
+    public function venta()
+	{
+	return $this->belongsTo('App\Venta','id_venta','id');
+    }
+    public function producto()
+	{
+	return $this->belongsTo('App\Producto','id_producto','id');
+    }
+
+    protected $table = 'venta_producto';
     public $timestamps = false;
     /**
      * The attributes that are mass assignable.
@@ -17,12 +24,10 @@ class Venta_producto extends Model
      * @var array
      */
     protected $fillable = [
-        'nombre',
+        'id_venta',
+        'id_producto',
+        'cantidad',
         'precio',
-        'id_proveedor',
-        'existencia',
-        'cantidad_minima',
-        'cantidad_maxima',
     ];
 
 }

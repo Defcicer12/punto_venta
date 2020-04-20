@@ -45,6 +45,14 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('product', ['as' => 'product.edit', 'uses' => 'ProductosController@edit']);
     Route::put('product', ['as' => 'product.update', 'uses' => 'ProductosController@update']);
     Route::get('product/search', ['as' => 'product.search', 'uses' => 'ProductosController@search']);
+    Route::get('product/searchw', ['as' => 'product.searchw', 'uses' => 'ProductosController@searchWithoutReload']);
 	Route::put('product/password', ['as' => 'product.password', 'uses' => 'ProductosController@password']);
 });
 
+Route::group(['middleware' => 'auth'], function () {
+	Route::get('sale', ['as' => 'sale.edit', 'uses' => 'VentaController@edit']);
+    Route::put('sale', ['as' => 'sale.update', 'uses' => 'VentaController@update']);
+    Route::get('sale/search', ['as' => 'sale.search', 'uses' => 'VentaController@search']);
+    Route::get('sale/searchw', ['as' => 'sale.searchw', 'uses' => 'VentaController@searchWithoutReload']);
+	Route::post('sale/create', ['as' => 'sale.create', 'uses' => 'VentaController@addVenta']);
+});
