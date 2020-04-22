@@ -7,13 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 class Venta extends Model
 {
 
-    // public function cliente()
-	// {
-	// return $this->belongsTo('App\Cliente','id_usuario','id');
-    // }
+    public function cliente()
+	{
+	return $this->belongsTo('App\Cliente','id_cliente','id');
+    }
     public function detalles()
 	{
 	return $this->hasMany('App\Venta_producto','id_venta','id');
+    }
+    public function pagos()
+	{
+	return $this->hasMany('App\Pago','id_venta','id');
     }
     public function empleado()
 	{

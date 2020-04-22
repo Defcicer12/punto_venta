@@ -56,3 +56,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('sale/searchw', ['as' => 'sale.searchw', 'uses' => 'VentaController@searchWithoutReload']);
 	Route::post('sale/create', ['as' => 'sale.create', 'uses' => 'VentaController@addVenta']);
 });
+
+Route::group(['middleware' => 'auth'], function () {
+	Route::get('payment', ['as' => 'payment.edit', 'uses' => 'PagoController@edit']);
+    Route::put('payment', ['as' => 'payment.update', 'uses' => 'PagoController@update']);
+    Route::get('payment/search', ['as' => 'payment.search', 'uses' => 'PagoController@search']);
+    Route::get('payment/searchw', ['as' => 'payment.searchw', 'uses' => 'PagoController@searchWithoutReload']);
+	Route::post('payment/create', ['as' => 'payment.create', 'uses' => 'PagoController@addPago']);
+});

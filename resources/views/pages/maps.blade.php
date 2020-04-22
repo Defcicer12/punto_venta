@@ -68,8 +68,8 @@
             </div>
             <div class="card-footer">
                 <button type="submit" onclick="Confirmar()" class="btn btn-sm btn-primary">{{ __('Confirmar orden') }}</button>
-                <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#exampleModal">Registrar pagos</button>
-                <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#Clientes">Nuevo cliente</button>
+                <button type="button" id="pagos" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#exampleModal">Registrar pagos</button>
+                <button type="button" id="clientes" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#Clientes">Nuevo cliente</button>
             </div>
         </div>
     </div>
@@ -79,44 +79,61 @@
     <div class="modal-dialog" role="document" >
         <div class="modal-content" >
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Pagos</h5>
+                <h5 class="modal-title" id="labelpagos">Pagos</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="title">{{ __('Edit Profile') }}</h5>
+                <form method="post" action="{{ route('payment.create') }}" autocomplete="off" id="form">
+
+                    @csrf
+                    @method('post')
+
+                    @include('alerts.success')
+
+                    <div class="form-group{{ $errors->has('name') ? ' has-danger' : '' }}">
+                        <label>{{ __('Tipo') }}</label>
+                        <select type="text" id="tipo-pago" name="tipo" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ __('Tipo') }}" value="{{ old('name', auth()->user()->name) }}">
+                        <option style="color:white; background-color:#27293D;" selected>Tipo</option>
+                        <option style="color:white; background-color:#27293D;" value="Efectivo">Efectivo</option>
+                        <option style="color:white; background-color:#27293D;" value="Con tarjeta">Con tarjeta</option>
+                        <option style="color:white; background-color:#27293D;" value="Credito en tienda">Credito en tienda</option>
+                        </select>
+                        @include('alerts.feedback', ['field' => 'name'])
                     </div>
-                    <form method="post" action="{{ route('profile.update') }}" autocomplete="off">
-                        <div class="card-body">
-                                @csrf
-                                @method('put')
 
-                                @include('alerts.success')
-
-                                <div class="form-group{{ $errors->has('name') ? ' has-danger' : '' }}">
-                                    <label>{{ __('Name') }}</label>
-                                    <input type="text" name="name" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ __('Name') }}" value="{{ old('name', auth()->user()->name) }}">
-                                    @include('alerts.feedback', ['field' => 'name'])
-                                </div>
-
-                                <div class="form-group{{ $errors->has('email') ? ' has-danger' : '' }}">
-                                    <label>{{ __('Email address') }}</label>
-                                    <input type="email" name="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="{{ __('Email address') }}" value="{{ old('email', auth()->user()->email) }}">
-                                    @include('alerts.feedback', ['field' => 'email'])
-                                </div>
-                        </div>
-                        <div class="card-footer">
-                            <button type="submit" class="btn btn-fill btn-primary">{{ __('Save') }}</button>
-                        </div>
-                    </form>
-                </div>
+                    <div class="form-group{{ $errors->has('monto') ? ' has-danger' : '' }}" id="pago-monto">
+                        <label>{{ __('Monto') }}</label>
+                        <input type="number" id="monto-pago" name="monto" class="form-control{{ $errors->has('monto') ? ' is-invalid' : '' }}" placeholder="{{ __('Monto') }}" value="{{ old('monto', auth()->user()->monto) }}">
+                        @include('alerts.feedback', ['field' => 'monto'])
+                    </div>
+            </div>
+            <div class="table-responsive" style="margin-left: 20px">
+                <table class="table">
+                    <thead class=" text-primary">
+                        <th>
+                            ID
+                        </th>
+                        <th>
+                            Tipo
+                        </th>
+                        <th>
+                            Monto
+                        </th>
+                        <th>
+                            Fecha
+                        </th>
+                    </thead>
+                    <tbody id="t-body-pagos">
+                        @include('pages.components.payments-table')
+                    </tbody>
+                </table>
             </div>
             <div class="modal-footer">
+                <button type="button" onclick="mostrarPagos()" class="btn btn-fill btn-primary">{{ __('Save') }}</button>
+                </form>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
             </div>
         </div>
     </div>
@@ -142,7 +159,11 @@
     </div>
 </div>
 <script>
+    // window.onload = hideElement;
     productos_agregados = [];
+    pagos_agregados = [];
+    venta = [];
+    contador_pagos = 1;
 
     function addProducto(producto) {
         if ( !$( ".tr-"+producto.id ).length ) {
@@ -161,7 +182,7 @@
                             $`+producto.precio+`
                         </td>
                         <td class="text-primary" style="width: 10%;">
-                            <input type="text" value="1" class="form-control" name="cantidad`+producto.id+`">
+                            <input type="number" value="1" class="form-control" name="cantidad`+producto.id+`">
                         </td>
                     </tr>`
             $('#' + producto.id).css('border-width', "5px");
@@ -171,11 +192,49 @@
             $('#' + producto.id).css('border-width', "1px");
             $( ".tr-"+producto.id ).remove();
         }
+        if(isEmpty(productos_agregados))
+            $('#pagos').hide();
+        else{
+            $('#pagos').show();
+        }
+    }
+
+    function hideElement(){
+        $('#pagos').hide();
+    }
+
+    function addPago(pago) {
+        if ( !$( ".tr-"+pago.id ).length ) {
+            pagos_agregados['pago'+pago.id] = pago;
+            html = `<tr class="tr-`+pago.id+`">
+                        <td>
+                            `+pago.id+`
+                        </td>
+                        <td>
+                            `+pago.nombre+`
+                        </td>
+                        <td>
+                            `+pago.existencia+`
+                        </td>
+                        <td>
+                            $`+pago.precio+`
+                        </td>
+                        <td class="text-primary" style="width: 10%;">
+                            <input type="number" value="1" class="form-control" name="cantidad`+pago.id+`">
+                        </td>
+                    </tr>`
+            $('#' + pago.id).css('border-width', "5px");
+            $('#t-body').append(html);
+            contador++;
+        }else{
+            delete pagos_agregados['pago'+pago.id];
+            $('#' + pago.id).css('border-width', "1px");
+            $( ".tr-"+pago.id ).remove();
+        }
     }
 
     async function Confirmar(){
         //searchw: http://punto_venta.test/product/searchw
-        precio = 0;
         productos = [];
         for (var key in productos_agregados) {
             productos_agregados[key].cantidad  = await $('input[name ="cantidad'+productos_agregados[key].id+'"]').val();
@@ -196,8 +255,52 @@
                 console.log(response)
                             if(response['sucess'] == 0)
                                 showNotification(response['errors'],'danger');
-                            else
+                            else{
+                                venta = response;
+                                $('#labelpagos').append(' <p class="label_total" style="text-align: center;">Total de venta: '+venta.precio+'</p>');
+                                $('#pago-monto').append(`
+                                <div hidden class="form-group{{ $errors->has('monto') ? ' has-danger' : '' }}" id="pago-monto">
+                                    <label>{{ __('id_venta') }}</label>
+                                    <input type="number" id="id_venta" hidden value="`+venta.id+`" name="id_venta" class="form-control{{ $errors->has('monto') ? ' is-invalid' : '' }}" placeholder="{{ __('Monto') }}" value="{{ old('monto', auth()->user()->monto) }}">
+                                    @include('alerts.feedback', ['field' => 'monto'])
+                                </div>`
+                                )
                                 showNotification('sicharcho','success');
+                            }
+                        }
+        });
+    }
+
+    async function mostrarPagos(){
+        await $.ajax({
+            type: "POST",
+            url: "{{ route('payment.create') }}",
+            data: {
+                _token: "{{ csrf_token() }}",
+                tipo: $('#tipo-pago option:selected').val(),
+                monto: $('#monto-pago').val(),
+                id_venta: $('#id_venta').val()
+            },
+            success: function(response){
+                if(response['success']==0){
+                    showNotification(response['errors'],'danger');
+                }else{
+                    console.log(response);
+                    // pagos_agregados.push() = response['new'];
+                    $('.label_total').text('Total de venta:'+response['data']['monto_venta']+' Por Cubrir:'+response['data']['monto_por_cubrir']);
+                }
+            }
+        });
+
+        await $.ajax({
+            type: "GET",
+            url: "{{ route('payment.searchw') }}",
+            data: {
+                _token: "{{ csrf_token() }}",
+                id_venta: $('#id_venta').val()
+            },
+            success: function(response){
+                            $('#t-body-pagos').html(response)
                         }
         });
     }
@@ -207,7 +310,7 @@
         search  = await $('#q').val();
         await $.ajax({
             type: "GET",
-            url: "http://punto_venta.test/product/searchw",
+            url: "{{ route('sale.searchw') }}",
             data: {q: search},
             success: function(response){
                             $('#product-selection').html(response)
@@ -232,6 +335,14 @@
       }
     });
   }
+
+  function isEmpty(obj) {
+    for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+}
 
 </script>
 @endsection

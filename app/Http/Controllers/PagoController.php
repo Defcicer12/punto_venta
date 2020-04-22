@@ -14,7 +14,7 @@ use App\Venta_producto;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
-class VentaController extends Controller
+class PagoController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -40,9 +40,9 @@ class VentaController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'id_empleado' => ['required', 'numeric', 'exists:users,id'],
-            'id_cliente' => ['required', 'numeric', 'exists:cliente,id'],
-            'productos' => ['required', 'array'],
+                    'tipo' => ['required'],
+                    'monto' => ['required', 'numeric','gt:0'],
+                    'id_venta' =>['required', 'exists:venta,id'] ,
         ]);
     }
 
@@ -50,54 +50,34 @@ class VentaController extends Controller
      * Create a new user instance after a valid registration.
      *
      * @param  array  $data
-     * @return \App\Venta
+     * @return \App\Pago
      */
     protected function create(array $data)
     {
-        $precio = 0;
-        foreach ($data['productos'] as $producto){
-            $precio += $producto['precio'] * $producto['cantidad'];
-        }
-        $new = Venta::create([
+        $monto_venta =  Venta::where('id',$data['id_venta'])->sum('precio');
+        $monto_cubierto = Pago::where('id_venta',$data['id_venta'])->sum('monto');
+        $monto_total = $monto_cubierto+$data['monto'];
+        if($monto_venta < $monto_total)
+            return ['success' => 0, 'errors' => 'El pago sobrepasa el monto de la venta'];
+        $new = Pago::create([
                 'fecha' => date("Y-m-d H:i:s"),
-                'precio' => $precio,
-                'id_empleado' => $data['id_empleado'],
-                'id_cliente' => $data['id_cliente'],
+                'tipo' => $data['tipo'],
+                'monto' => $data['monto'],
+                'id_venta' => $data['id_venta'],
         ]);
-
-        foreach ($data['productos'] as $producto) {
-            Venta_producto::create([
-                'id_venta' => $new['id'],
-                'id_producto' => $producto['id'],
-                'cantidad' => $producto['cantidad'],
-                'precio' => $producto['precio'],
-                ]);
-        };
-
-        return $new;
+        $monto_cubierto = Pago::where('id_venta',$data['id_venta'])->sum('monto');
+        return ['new' =>$new,'data'=>['monto_cubierto' =>$monto_cubierto,'monto_venta'=>$monto_venta,'monto_por_cubrir'=>abs($monto_venta - $monto_cubierto)]];
     }
 
-    public function addVenta(Request $request)
+    public function addPago(Request $request)
     {
         $validator = $this->validator($request->all());
-        //return $validator->errors();
         if ($validator->fails()) {
-            return ['sucess' => 0, 'errors' => $validator->errors()->first()];
+            return ['success' => 0, 'errors' => $validator->errors()->first()];
         }
 
-        $venta = $this->create($request->all());
-        $venta->detalles;
-        return $venta;
-    }
-
-    /**
-     * Show the form for editing the profile.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function edit()
-    {
-        return view('profile.edit');
+        $pago = $this->create($request->all());
+        return $pago;
     }
 
     /**
@@ -115,10 +95,17 @@ class VentaController extends Controller
 
     public function search(Request $r)
     {
-        $q= $r->get('q');
-        $ventas = Venta::where('nombre','LIKE','%'.$q.'%')->get();
+        $data= $r->all();
+        $ventas = Pago::where('id_venta',$data['id_venta'])->get();
         if(count($ventas) > 0)
             return view('pages.maps',['ventas' => $ventas]);
         else return view ('pages.maps')->withMessage('No Details found. Try to search again !');
+    }
+
+    public function searchWithoutReload(Request $r)
+    {
+        $data= $r->all();
+        $pagos = Pago::where('id_venta',$data['id_venta'])->get();
+        return view('pages.components.payments-table',compact('pagos'));
     }
 }

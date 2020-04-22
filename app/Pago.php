@@ -17,10 +17,10 @@ class Pago extends Model
      * @var array
      */
     protected $fillable = [
-        'nombre',
         'tipo',
         'monto',
         'id_venta',
+        'fecha'
     ];
 
 }
