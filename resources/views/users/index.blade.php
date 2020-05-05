@@ -49,8 +49,8 @@
                 </div>
             </div>
     {{-- Modal --}}
-    <div class="modal modal-black fade" style="position:fixed; top: auto;" id="clientes-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document" >
+    <div class="modal modal-black fade" id="clientes-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document" style="position: relative; bottom: 25%;">
             <div class="modal-content" >
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Usuarios</h5>
