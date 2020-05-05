@@ -3,7 +3,7 @@
 @section('content')
 <div class="row">
     <div class="col-lg-12">
-        <div class="card">
+        <div class="card" id= "products-card">
             <div class="card-header">
                 <h5 class="title">{{ __('Productos') }}</h5>
             </div>
@@ -26,7 +26,7 @@
             <div class="card-header">
                 <h5 class="title">{{ __('Productos Agregados') }}</h5>
             </div>
-            <div class="table-responsive">
+            <div class="table-responsive" id="tabla-agregados">
                 <table class="table">
                     <thead class=" text-primary">
                         <th>
@@ -67,9 +67,11 @@
                 </div>
             </div>
             <div class="card-footer">
-                <button type="submit" onclick="Confirmar()" class="btn btn-sm btn-primary">{{ __('Confirmar orden') }}</button>
+                <button id="confirmar" type="submit" onclick="Confirmar()" class="btn btn-sm btn-primary">{{ __('Confirmar Venta') }}</button>
+                <button id="cerrar" onclick="Cerrar()" class="btn btn-sm btn-primary">{{ __('Cerrar Venta') }}</button>
                 <button type="button" id="pagos" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#exampleModal">Registrar pagos</button>
-                <button type="button" id="clientes" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#Clientes">Nuevo cliente</button>
+                <button type="button" id="clientes" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#clientes-modal">Nuevo cliente</button>
+                <button type="button" id="cancelar" onclick="cancelar()" class="btn btn-sm btn-primary">{{ __('Cancelar') }}</button>
             </div>
         </div>
     </div>
@@ -139,17 +141,17 @@
     </div>
 </div>
 <!-- Modal2 -->
-<div class="modal modal-black fade" id="Clientes" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+<div class="modal modal-black fade" id="clientes-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
     <div class="modal-dialog" role="document" >
         <div class="modal-content" >
         <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Clientes</h5>
+            <h5 class="modal-title" id="exampleModalLabel">clientes</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
         </div>
         <div class="modal-body">
-            Clientes
+            clientes
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -159,7 +161,7 @@
     </div>
 </div>
 <script>
-    // window.onload = hideElement;
+    window.onload = hideElement;
     productos_agregados = [];
     pagos_agregados = [];
     venta = [];
@@ -192,15 +194,12 @@
             $('#' + producto.id).css('border-width', "1px");
             $( ".tr-"+producto.id ).remove();
         }
-        if(isEmpty(productos_agregados))
-            $('#pagos').hide();
-        else{
-            $('#pagos').show();
-        }
     }
 
     function hideElement(){
         $('#pagos').hide();
+        $('#cerrar').hide();
+        $('#cancelar').hide();
     }
 
     function addPago(pago) {
@@ -240,7 +239,6 @@
             productos_agregados[key].cantidad  = await $('input[name ="cantidad'+productos_agregados[key].id+'"]').val();
             productos.push(productos_agregados[key]);
         }
-        console.log(productos);
 
         await $.ajax({
             type: "POST",
@@ -254,10 +252,16 @@
             success: function(response){
                 console.log(response)
                             if(response['sucess'] == 0)
+                            {
                                 showNotification(response['errors'],'danger');
+                            }
                             else{
                                 venta = response;
+                                for (var key in productos_agregados) {
+                                    $('input[name ="cantidad'+productos_agregados[key].id+'"]').prop('readonly',true);
+                                }
                                 $('#labelpagos').append(' <p class="label_total" style="text-align: center;">Total de venta: '+venta.precio+'</p>');
+                                $('#tabla-agregados').append(' <p class="label_total" style="text-align: center;">Total de venta: '+venta.precio+'</p>');
                                 $('#pago-monto').append(`
                                 <div hidden class="form-group{{ $errors->has('monto') ? ' has-danger' : '' }}" id="pago-monto">
                                     <label>{{ __('id_venta') }}</label>
@@ -266,9 +270,44 @@
                                 </div>`
                                 )
                                 showNotification('sicharcho','success');
+                                $('#pagos').show();
+                                $('#cerrar').show();
+                                $('#confirmar').hide();
+                                $('#cancelar').show();
+                                $('#products-card').hide();
                             }
                         }
         });
+    }
+
+    async function Cerrar(){
+        await $.ajax({
+            type: "PUT",
+            url: "{{ route('sale.close') }}",
+            data: {
+                _token: "{{ csrf_token() }}",
+                tipo: $('#tipo-pago option:selected').val(),
+                monto: $('#monto-pago').val(),
+                id_venta: $('#id_venta').val()
+            },
+            success: function(response){
+                if(response['success']==0){
+                    showNotification(response['errors'],'danger');
+                }else{
+                    console.log(response);
+                    // pagos_agregados.push() = response['new'];
+                    $('.label_total').text('Total de venta:'+response['data']['monto_venta']+' Por Cubrir:'+response['data']['monto_por_cubrir']);
+                    showNotification('Venta cerrada con éxito, redireccionando','success');
+                    setTimeout(() => {
+                        window.location.replace("{{ route('pages.maps') }}");
+                        }, 2000);
+                }
+            }
+        });
+    }
+
+    function cancelar(){
+        window.location.replace("{{ route('pages.maps') }}");
     }
 
     async function mostrarPagos(){
@@ -288,6 +327,8 @@
                     console.log(response);
                     // pagos_agregados.push() = response['new'];
                     $('.label_total').text('Total de venta:'+response['data']['monto_venta']+' Por Cubrir:'+response['data']['monto_por_cubrir']);
+                    showNotification(response['errors'],'success');
+                    $('#cancelar').hide();
                 }
             }
         });
@@ -310,7 +351,7 @@
         search  = await $('#q').val();
         await $.ajax({
             type: "GET",
-            url: "{{ route('sale.searchw') }}",
+            url: "{{ route('product.searchw') }}",
             data: {q: search},
             success: function(response){
                             $('#product-selection').html(response)

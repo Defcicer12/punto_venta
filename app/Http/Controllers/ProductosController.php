@@ -104,18 +104,18 @@ class ProductosController extends Controller
         return back()->withStatus(__('Profile successfully updated.'));
     }
 
-    public function search(Request $r)
+    public function search(Request $request)
     {
-        $q= $r->get('q');
+        $q= $request->get('q');
         $productos = Productos::where('nombre','LIKE','%'.$q.'%')->get();
         if(count($productos) > 0)
             return compact('productos');
         else return view ('pages.maps')->withMessage('No Details found. Try to search again !');
     }
 
-    public function searchWithoutReload(Request $r)
+    public function searchWithoutReload(Request $request)
     {
-        $q= $r->get('q');
+        $q= $request->get('q');
         $productos = Productos::where('nombre','LIKE','%'.$q.'%')->get();
         return view('pages.components.select-products-table',compact('productos'));
     }

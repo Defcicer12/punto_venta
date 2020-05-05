@@ -40,7 +40,7 @@ class PagoController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-                    'tipo' => ['required'],
+                    'tipo' => ['required','in:Efectivo,Con tarjeta,Credito en tienda'],
                     'monto' => ['required', 'numeric','gt:0'],
                     'id_venta' =>['required', 'exists:venta,id'] ,
         ]);
@@ -59,14 +59,23 @@ class PagoController extends Controller
         $monto_total = $monto_cubierto+$data['monto'];
         if($monto_venta < $monto_total)
             return ['success' => 0, 'errors' => 'El pago sobrepasa el monto de la venta'];
+
         $new = Pago::create([
                 'fecha' => date("Y-m-d H:i:s"),
                 'tipo' => $data['tipo'],
                 'monto' => $data['monto'],
                 'id_venta' => $data['id_venta'],
         ]);
+
         $monto_cubierto = Pago::where('id_venta',$data['id_venta'])->sum('monto');
-        return ['new' =>$new,'data'=>['monto_cubierto' =>$monto_cubierto,'monto_venta'=>$monto_venta,'monto_por_cubrir'=>abs($monto_venta - $monto_cubierto)]];
+
+        if(VentaController::estaPagada($data['id_venta']))
+        {
+            VentaController::pagar($data['id_venta']);
+            return ['new' =>$new,'data'=>['monto_cubierto' =>$monto_cubierto,'monto_venta'=>$monto_venta,'monto_por_cubrir'=>abs($monto_venta - $monto_cubierto)],'errors' => 'Venta pagada'];
+        }
+        else
+            return ['new' =>$new,'data'=>['monto_cubierto' =>$monto_cubierto,'monto_venta'=>$monto_venta,'monto_por_cubrir'=>abs($monto_venta - $monto_cubierto)],'errors' => 'Pago capturado'];
     }
 
     public function addPago(Request $request)

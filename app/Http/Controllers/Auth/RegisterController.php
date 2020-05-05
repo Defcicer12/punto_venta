@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\User;
+use App\Rules\Custom_email;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Request;
 
 class RegisterController extends Controller
 {
@@ -38,7 +40,7 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+        $this->middleware('auth');
     }
 
     /**
@@ -51,8 +53,10 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users', new Custom_email],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'departamento' => ['required', 'string', 'in:Compras,Ventas,Almacén'],
+            'telefono' => ['required', 'numeric', 'digits:10'],
         ]);
     }
 
@@ -68,6 +72,28 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'departamento' => $data['departamento'],
+            'telefono' => $data['telefono'],
         ]);
+    }
+
+    public function register(Request $request)
+    {
+        $validator = $this->validator($request->all());
+        //return $validator->errors();
+        if ($validator->fails()) {
+            $data = $request->all();
+            $data['success'] = 0;
+            session()->flashInput($data);
+            return view('users\components\modal-create')
+            ->withErrors($validator->errors())
+            ->withInput($request->all());
+        }
+
+        $user = $this->create($request->all());
+
+        session()->flash('status','Usuario creado correctamente');
+
+        return view('users\components\modal-create');
     }
 }

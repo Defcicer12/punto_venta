@@ -35,15 +35,12 @@ class VentaController extends Controller
      * Get a validator for an incoming registration request.
      *
      * @param  array  $data
+     * @param  array  $rules
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    protected function validator(array $data)
+    protected function validator(array $data, array $rules)
     {
-        return Validator::make($data, [
-            'id_empleado' => ['required', 'numeric', 'exists:users,id'],
-            'id_cliente' => ['required', 'numeric', 'exists:cliente,id'],
-            'productos' => ['required', 'array'],
-        ]);
+        return Validator::make($data, $rules);
     }
 
     /**
@@ -56,6 +53,11 @@ class VentaController extends Controller
     {
         $precio = 0;
         foreach ($data['productos'] as $producto){
+            $validator = $this->validator($producto,Venta::$reglas_productos);
+            //return $validator->errors();
+            if ($validator->fails()) {
+                return ['sucess' => 0, 'errors' => $validator->errors()->first()];
+            }
             $precio += $producto['precio'] * $producto['cantidad'];
         }
         $new = Venta::create([
@@ -79,14 +81,14 @@ class VentaController extends Controller
 
     public function addVenta(Request $request)
     {
-        $validator = $this->validator($request->all());
+        $validator = $this->validator($request->all(),Venta::$reglas_crear);
         //return $validator->errors();
         if ($validator->fails()) {
             return ['sucess' => 0, 'errors' => $validator->errors()->first()];
         }
 
         $venta = $this->create($request->all());
-        $venta->detalles;
+
         return $venta;
     }
 
@@ -108,17 +110,51 @@ class VentaController extends Controller
      */
     public function update(ProfileRequest $request)
     {
-        auth()->user()->update($request->all());
+        Venta::whereId($request->get('id_venta'))->update($request->all());
 
         return back()->withStatus(__('Profile successfully updated.'));
     }
 
-    public function search(Request $r)
+    public static function pagar(int $id_venta)
     {
-        $q= $r->get('q');
+        $model  = Venta::where('id',$id_venta)
+        ->update(['estado' => 'Pagada']);
+        return ['success' => 1, 'data' => $model,'errors'=>'none'];
+    }
+
+    public function cerrar(Request $request)
+    {
+        $id_venta = $request->get('id_venta');
+
+        $model  = Venta::where('id',$id_venta)
+        ->first();
+        if($model->estado != 'Pagada')
+            return ['success' => 0, 'data' => $model,'errors'=>'Venta no pagada'];
+        else
+        {
+            $model->update(['estado' => 'Cerrada']);
+            $model->save();
+            return ['success' => 1, 'data' => $model,'errors'=>'Venta cerrada con éxito!'];
+        }
+    }
+
+    public function search(Request $request)
+    {
+        $q= $request->get('q');
         $ventas = Venta::where('nombre','LIKE','%'.$q.'%')->get();
         if(count($ventas) > 0)
             return view('pages.maps',['ventas' => $ventas]);
         else return view ('pages.maps')->withMessage('No Details found. Try to search again !');
+    }
+
+    public static function estaPagada(int $id_venta)
+    {
+        $monto_cubierto = Pago::where('id_venta',$id_venta)->sum('monto');
+        $monto_venta = Venta::whereId($id_venta)->sum('precio');
+
+        if($monto_cubierto != $monto_venta)
+            return false;
+        else
+            return true;
     }
 }

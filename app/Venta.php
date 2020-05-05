@@ -23,7 +23,16 @@ class Venta extends Model
 	{
 	return $this->belongsTo('App\Users','id_empleado','id');
     }
-
+    public static $reglas_crear = [
+        'id_empleado' => ['required', 'numeric', 'exists:users,id'],
+        'id_cliente' => ['required', 'numeric', 'exists:cliente,id'],
+        'productos' => ['required', 'array'],
+    ];
+    public static $reglas_productos = [
+        'id' => ['required', 'numeric', 'exists:producto,id'],
+        'cantidad' => ['required', 'numeric','gt:0'],
+        'precio' => ['required','numeric'],
+    ];
     protected $table = 'venta';
     protected $primaryKey = 'id';
     protected $guarded = ['id'];

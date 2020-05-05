@@ -9,55 +9,32 @@
                         <div class="card ">
                             <div class="card-header">
                                 <div class="row">
-                                    <div class="col-8">
+                                    <div class="col-2">
                                         <h4 class="card-title">Users</h4>
                                     </div>
-                                    <div class="col-2">
-                                        <button class="btn btn-sm btn-primary col-4" id="search-button" data-toggle="modal" data-target="#searchModal"><i class="tim-icons icon-zoom-split"></i>
-                                        </button>
+                                    <div class="col-8">
+                                        <input type="text" class="form-control" name="q" id="q" placeholder="Buscar productos" onkeyup="searchWithoutReload()">
                                     </div>
                                     <div class="col">
-                                        <a href="#" class="btn btn-sm btn-primary">Add user</a>
+                                        <button type="button" id="clientes" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#clientes-modal-create">Añadir usuario</button>
                                     </div>
                                 </div>
                             </div>
                             <div class="card-body">
 
                                 <div class="">
-                                    <table class="table tablesorter " id="">
+                                    <table class="table tablesorter ">
                                         <thead class=" text-primary">
                                             <tr>
-                                                <th scope="col">Name</th>
+                                                <th scope="col">Nombre</th>
                                                 <th scope="col">Email</th>
                                                 <th scope="col">Departamento</th>
                                                 <th scope="col">Telefono</th>
                                                 <th scope="col">Acciones</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            @foreach ($users as $user)
-                                            <tr>
-                                                <td>{{$user['name']}}</td>
-                                                <td>
-                                                    <a href="mailto:{{$user['email']}}">{{$user['email']}}</a>
-                                                </td>
-                                                <td>{{$user['departamento']}}</td>
-                                                <td>{{$user['telefono']}}</td>
-                                                <td class="text-right">
-                                                    <div class="dropdown">
-                                                        <a class="btn btn-sm btn-icon-only text-light" href="#"
-                                                            role="button" data-toggle="dropdown" aria-haspopup="true"
-                                                            aria-expanded="false">
-                                                            <i class="fas fa-ellipsis-v"></i>
-                                                        </a>
-                                                        <div
-                                                            class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                                            <a class="dropdown-item" href="#">Edit</a>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            @endforeach
+                                        <tbody id="users-table">
+                                            @include('users.components.users-table')
                                         </tbody>
                                     </table>
                                 </div>
@@ -71,17 +48,77 @@
                     </div>
                 </div>
             </div>
-            <div class="modal modal-search fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="searchModal" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="{{ __('SEARCH') }}">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="{{ __('Close') }}">
-                                <i class="tim-icons icon-simple-remove"></i>
-                          </button>
-                        </div>
-                    </div>
+    {{-- Modal --}}
+    <div class="modal modal-black fade" style="position:fixed; top: auto;" id="clientes-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document" >
+            <div class="modal-content" >
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Usuarios</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="edit-modal-body">
+                    @include('users\components\modal-edit')
                 </div>
             </div>
+        </div>
+    </div>
+    {{-- Modal2 --}}
+    <div class="modal modal-black fade" id="clientes-modal-create" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document" style="position: relative; bottom: 25%;">
+            <div class="modal-content" >
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Usuarios</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @include('users\components\modal-create')
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
+
+@stack('js')
+<script>
+    async function searchWithoutReload(){
+        //searchw: http://punto_venta.test/product/searchw
+        search  = await $('#q').val();
+        await $.ajax({
+            type: "GET",
+            url: "{{ route('user.components.users-table') }}",
+            data: {q: search},
+            success: function(response){
+                            $('#users-table').html(response)
+                        }
+        });
+    }
+    async function fillEditModal(user){
+        //searchw: http://punto_venta.test/product/searchw
+        console.log(user)
+        await $.ajax({
+            type: "GET",
+            url: "{{ route('components.user-edit-modal') }}",
+            data: user,
+            success: function(response){
+                            $('#edit-modal-body').html(response)
+                        }
+        });
+    }
+
+    async function reloadTable(){
+        await $.ajax({
+            type: "GET",
+            url: "{{ route('user.components.users-table') }}",
+            data: {q: ''},
+            success: function(response){
+                            $('#users-table').html(response)
+                        }
+        });
+    }
+</script>
+@stack('js')
 @endsection
