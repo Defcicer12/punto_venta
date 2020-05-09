@@ -18,14 +18,27 @@ class ComponentsController extends Controller
         return view('pages.icons');
     }
 
-    /**
-     * Display maps page
-     *
-     * @return \Illuminate\View\View
-     */
     public function userEditModal(Request $request)
     {
         session()->flashInput($request->all());
         return view('users.components.modal-edit');
+    }
+
+    public function clientEditModal(Request $request)
+    {
+        session()->flashInput($request->all());
+        return view('clients.components.modal-edit');
+    }
+
+    public function productEditModal(Request $request)
+    {
+        session()->flashInput($request->all());
+        return view('products.components.modal-edit');
+    }
+
+    public function refundEditModal(Request $request)
+    {
+        session()->flashInput($request->all());
+        return view('refunds.components.modal-edit',['productos' => $request->get('detalles')]);
     }
 }

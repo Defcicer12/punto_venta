@@ -21,7 +21,7 @@ class Venta extends Model
     }
     public function empleado()
 	{
-	return $this->belongsTo('App\Users','id_empleado','id');
+	return $this->belongsTo('App\User','id_empleado','id');
     }
     public static $reglas_crear = [
         'id_empleado' => ['required', 'numeric', 'exists:users,id'],

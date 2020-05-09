@@ -1,0 +1,34 @@
+@if (isset($productos))
+    @foreach ($productos as $producto)
+        <tr class="tr-1">
+            <td>
+                {{$producto['id_producto']}}
+            </td>
+            <td>
+                {{$producto['id_venta']}}
+            </td>
+            <td>
+                {{$producto['precio']}}
+            </td>
+            <td>
+                {{$producto['cantidad']}}
+            </td>
+            <td class="text-primary" style="width: 10%;">
+            <input type="number" value="{{$producto['cantidad']}}" class="form-control" id="">
+            </td>
+            <td class="text-center">
+                <div class="dropdown">
+                    <a class="btn btn-sm btn-icon-only text-light" href="#"
+                        role="button" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </a>
+                    <div
+                        class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#clientes-modal" onclick="fillEditModal({{$producto['id_venta']}})">Devolver</a>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    @endforeach
+@endif

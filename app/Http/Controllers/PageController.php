@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Cliente;
+use App\Movimiento_inventario;
 use App\Productos;
+use App\User;
+use App\Venta;
 
 class PageController extends Controller
 {
@@ -78,5 +81,50 @@ class PageController extends Controller
     public function upgrade()
     {
         return view('pages.upgrade');
+    }
+
+    public function clients()
+    {
+        return view('clients.index',['clients' => Cliente::all()]);
+    }
+
+    public function products()
+    {
+        return view('products.index',['products' => Productos::all()]);
+    }
+
+    public function sales()
+    {
+        return view('sales.index',['sales' => Venta::all()]);
+    }
+
+    public function refunds()
+    {
+        return view('refunds.index',['sales' => Venta::all()]);
+    }
+
+    public function inventory()
+    {
+        return view('inventory.index',['movements' => Movimiento_inventario::all()]);
+    }
+
+    public function adjusment()
+    {
+        return view('adjusments.index',['adjusments' => Movimiento_inventario::all()]);
+    }
+
+    public function flux()
+    {
+        return view('flux.index',['flux' => Movimiento_inventario::all()]);
+    }
+
+    public function cash()
+    {
+        return view('cash.index',['cash' => Movimiento_inventario::all()]);
+    }
+
+    public function corte()
+    {
+        return view('corte',['corte' => Movimiento_inventario::all()]);
     }
 }

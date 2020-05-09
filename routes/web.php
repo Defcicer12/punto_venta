@@ -36,10 +36,15 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('sales', ['as' => 'pages.sales', 'uses' => 'PageController@sales']);
     Route::get('refunds', ['as' => 'pages.refunds', 'uses' => 'PageController@refunds']);
     Route::get('inventory', ['as' => 'pages.inventory', 'uses' => 'PageController@inventory']);
+    Route::get('adjusment', ['as' => 'pages.adjusment', 'uses' => 'PageController@adjusment']);
+    Route::get('corte', ['as' => 'corte', 'uses' => 'PageController@corte']);
 });
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('user/modal-edit', ['as' => 'components.user-edit-modal', 'uses' => 'ComponentsController@userEditModal']);
+    Route::get('client/modal-edit', ['as' => 'components.client-edit-modal', 'uses' => 'ComponentsController@clientEditModal']);
+    Route::get('product/modal-edit', ['as' => 'components.product-edit-modal', 'uses' => 'ComponentsController@productEditModal']);
+    Route::get('refund/modal-edit', ['as' => 'components.refund-edit-modal', 'uses' => 'ComponentsController@refundEditModal']);
 });
 
 Route::group(['middleware' => 'auth'], function () {
