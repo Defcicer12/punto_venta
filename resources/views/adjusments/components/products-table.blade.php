@@ -5,7 +5,7 @@
             {{$adjusment['tipo']}}
         </td>
         <td>{{$adjusment['fecha']}}</td>
-        <td>{{$adjusment['cantidad']}}</td>
+        <td>{{$adjusment['monto']}}</td>
         <td class="text-right">
             <div class="dropdown">
                 <a class="btn btn-sm btn-icon-only text-light" href="#"

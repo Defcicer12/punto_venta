@@ -1,4 +1,4 @@
-@extends('layouts.app', ['pageSlug' => 'dashboard'])
+@extends('layouts.app', ['pageSlug' => 'Corte de caja','page' => __('Corte de caja')])
 
 @section('content')
     <div class="row">
@@ -49,12 +49,49 @@
         <div class="col-lg-4">
             <div class="card card-chart">
                 <div class="card-header">
-                    <h5 class="card-category">Ventas totales</h5>
-                    <h3 class="card-title"><i class="tim-icons icon-bell-55 text-primary"></i> 763,215</h3>
+                    <h5 class="card-category">Flujo efectivo</h5>
                 </div>
                 <div class="card-body">
                     <div class="chart-area">
-                        <canvas id="chartLinePurple"></canvas>
+                        {{-- <canvas id="chartLinePurple"></canvas> --}}
+                        <div class="table-responsive">
+                            <table class="table tablesorter" id="">
+                                <thead class=" text-primary">
+                                    <tr>
+                                        <th>
+                                            ID
+                                        </th>
+                                        <th>
+                                            Fecha
+                                        </th>
+                                        <th>
+                                            Folio Venta
+                                        </th>
+                                        <th class="text-center">
+                                            descripcion
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($devoluciones as $devolucion)
+                                        <tr>
+                                            <td>
+                                                {{$devolucion->id}}
+                                            </td>
+                                            <td>
+                                                {{$devolucion->fecha}}
+                                            </td>
+                                            <td>
+                                                {{$devolucion->id_venta}}
+                                            </td>
+                                            <td class="text-center">
+                                                {{$devolucion->descripcion}}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -62,8 +99,8 @@
         <div class="col-lg-4">
             <div class="card card-chart">
                 <div class="card-header">
-                    <h5 class="card-category">Ventas diarias</h5>
-                    <h3 class="card-title"><i class="tim-icons icon-delivery-fast text-info"></i> 3,500€</h3>
+                    <h5 class="card-category">Ventas al día</h5>
+                    <h3 class="card-title"><i class="tim-icons icon-delivery-fast text-info"></i> {{$total}}</h3>
                 </div>
                 <div class="card-body">
                     <div class="chart-area">
@@ -76,17 +113,54 @@
             <div class="card card-chart">
                 <div class="card-header">
                     <h5 class="card-category">Devoluciones</h5>
-                    <h3 class="card-title"><i class="tim-icons icon-send text-success"></i> 12,100K</h3>
                 </div>
                 <div class="card-body">
                     <div class="chart-area">
-                        <canvas id="chartLineGreen"></canvas>
+                        {{-- <canvas id="chartLineGreen"></canvas> --}}
+                        <div class="table-responsive">
+                            <table class="table tablesorter" id="">
+                                <thead class=" text-primary">
+                                    <tr>
+                                        <th>
+                                            ID
+                                        </th>
+                                        <th>
+                                            Fecha
+                                        </th>
+                                        <th>
+                                            Folio Venta
+                                        </th>
+                                        <th class="text-center">
+                                            descripcion
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($devoluciones as $devolucion)
+                                        <tr>
+                                            <td>
+                                                {{$devolucion->id}}
+                                            </td>
+                                            <td>
+                                                {{$devolucion->fecha}}
+                                            </td>
+                                            <td>
+                                                {{$devolucion->id_venta}}
+                                            </td>
+                                            <td class="text-center">
+                                                {{$devolucion->descripcion}}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row">
+    <div hidden class="row">
         <div class="col-lg-6 col-md-12">
             <div class="card card-tasks">
                 <div class="card-header ">
@@ -374,8 +448,13 @@
 @push('js')
     <script src="{{ asset('black') }}/js/plugins/chartjs.min.js"></script>
     <script>
+        pagos = {!! $pagos !!}
+        porTipo = {!! $montos !!}
         $(document).ready(function() {
-          demo.initDashboardPageCharts();
+          demo.initBigChart(pagos);
+        //   demo.initSmallChart();
+        //   demo.initGreenChart();
+          demo.initCountryChart(porTipo);
         });
     </script>
 @endpush

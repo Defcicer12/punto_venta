@@ -16,12 +16,17 @@
                                         <input type="text" class="form-control" name="q" id="q" placeholder="Buscar productos" onkeyup="searchWithoutReload()">
                                     </div>
                                     <div class="col">
-                                        <button type="button" id="clientes" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#clientes-modal-create">Añadir movimiento</button>
+                                        <button type="button" id="clientes" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#clientes-modal-create">Recoger efectivo</button>
                                     </div>
                                 </div>
                             </div>
                             <div class="card-body">
-
+                            @if ($monto_caja > 20000)
+                                <div class="alert alert-danger" role="alert">
+                                    {{ __('Se debe recoger el monto en caja') }}
+                                </div>
+                            @endif
+                            <h4 class="card-title">Monto en caja: {{ $monto_caja }}</h4>
                                 <div class="">
                                     <table class="table tablesorter ">
                                         <thead class=" text-primary">
@@ -29,7 +34,7 @@
                                                 <th scope="col">ID</th>
                                                 <th scope="col">TIPO</th>
                                                 <th scope="col">fecha</th>
-                                                <th scope="col">Cantidad</th>
+                                                <th scope="col">Monto</th>
                                                 <th scope="col">Acciones</th>
                                             </tr>
                                         </thead>
@@ -59,7 +64,7 @@
                     </button>
                 </div>
                 <div class="modal-body" id="edit-modal-body">
-                    @include('inventory\components\modal-edit')
+                    @include('adjusments\components\modal-edit')
                 </div>
             </div>
         </div>
@@ -75,7 +80,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    @include('inventory\components\modal-create')
+                    @include('adjusments\components\modal-create')
                 </div>
             </div>
         </div>

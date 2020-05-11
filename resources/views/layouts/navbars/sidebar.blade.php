@@ -5,16 +5,16 @@
             <a href="#" class="simple-text logo-normal">{{ __('Punto Venta') }}</a>
         </div>
         <ul class="nav">
-            <li @if ($pageSlug=='dashboard' ) class="active " @endif>
+            <li @if ($pageSlug=='Corte de caja' ) class="active " @endif>
                 <a href="{{ route('home') }}">
                     <i class="tim-icons icon-chart-pie-36"></i>
-                    <p>{{ __('Flujo de efectivo') }}</p>
+                    <p>{{ __('Corte de caja') }}</p>
                 </a>
             </li>
             <li @if ($pageSlug=='corte' ) class="active " @endif>
                 <a href="{{ route('corte') }}">
                     <i class="tim-icons icon-chart-pie-36"></i>
-                    <p>{{ __('Corte de caja') }}</p>
+                    <p>{{ __('Flujo de efectivo') }}</p>
                 </a>
             </li>
             <li>

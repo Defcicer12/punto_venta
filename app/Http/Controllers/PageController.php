@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Cliente;
 use App\Movimiento_inventario;
+use App\Pago;
 use App\Productos;
 use App\User;
 use App\Venta;
@@ -105,7 +106,7 @@ class PageController extends Controller
 
     public function inventory()
     {
-        return view('inventory.index',['movements' => Movimiento_inventario::all()]);
+        return view('inventory.index',['movements' => Movimiento_inventario::all(),'productos' => Productos::all()]);
     }
 
     public function adjusment()
@@ -125,6 +126,7 @@ class PageController extends Controller
 
     public function corte()
     {
-        return view('corte',['corte' => Movimiento_inventario::all()]);
+        $pagos = Pago::where('tipo','Efectivo')->where('en_caja',1)->whereDay('fecha',date('d'))->get();
+        return view('adjusments.index',['adjusments' => $pagos,'monto_caja'=>$pagos->sum('monto')]);
     }
 }

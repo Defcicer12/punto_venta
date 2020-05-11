@@ -1,4 +1,4 @@
-@extends('layouts.app', ['page' => __('Administración de productos'), 'pageSlug' => 'inventario'])
+@extends('layouts.app', ['page' => __('Inventario'), 'pageSlug' => 'inventario'])
 
 @section('content')
 <body class="">
@@ -10,7 +10,7 @@
                             <div class="card-header">
                                 <div class="row">
                                     <div class="col-2">
-                                        <h4 class="card-title">Productos</h4>
+                                        <h4 class="card-title">Inventario</h4>
                                     </div>
                                     <div class="col-8">
                                         <input type="text" class="form-control" name="q" id="q" placeholder="Buscar productos" onkeyup="searchWithoutReload()">
@@ -84,6 +84,11 @@
 
 @stack('js')
 <script>
+    window.onload = hideElement;
+    function hideElement()
+    {
+        $('#entrada_salida').hide();
+    }
     async function searchWithoutReload(){
         //searchw: http://punto_venta.test/product/searchw
         search  = await $('#q').val();

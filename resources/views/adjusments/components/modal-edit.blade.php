@@ -3,7 +3,7 @@
         <h5 class="title">{{ __('Editar producto') }}</h5>
     </div>
     <form method="post" action="{{ route('profile.update') }}" autocomplete="off" id="modal-edit-form">
-    @include('products\components\edit-profile-form')
+    @include('adjusments\components\edit-profile-form')
     </form>
 </div>
 <script>
