@@ -1,23 +1,30 @@
 @foreach ($movements as $movement)
+    @if ($movement['tipo'] == 'Devolucion')
     <tr>
-        <td>{{$movement['id']}}</td>
+        <td>{{$movement->movimiento->id}}</td>
         <td>
             {{$movement['tipo']}}
         </td>
         <td>{{$movement['fecha']}}</td>
-        <td>{{$movement['cantidad']}}</td>
-        <td class="text-right">
-            <div class="dropdown">
-                <a class="btn btn-sm btn-icon-only text-light" href="#"
-                    role="button" data-toggle="dropdown" aria-haspopup="true"
-                    aria-expanded="false">
-                    <i class="fas fa-ellipsis-v"></i>
-                </a>
-                <div
-                    class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#clientes-modal" onclick="fillEditModal({{$movement}})">Edit</a>
-                </div>
-            </div>
+        <td>{{ $movement['salida'] == 1 ? '-' : '+' }}{{$movement->movimiento->cantidad}}</td>
+        <td>
+            {{$movement->movimiento->producto->nombre}}
         </td>
     </tr>
+    @endif
+    @if ($movement['tipo'] == 'Venta')
+        @foreach ($movement->movimiento->detalles as $detalle)
+            <tr>
+                <td>{{$movement->movimiento->id}}</td>
+                <td>
+                    {{$movement['tipo']}}
+                </td>
+                <td>{{$movement['fecha']}}</td>
+                <td>{{ $movement['salida'] == 1 ? '-' : '+' }}{{$detalle->cantidad}}</td>
+                <td>
+                    {{$detalle->producto->nombre}}
+                </td>
+            </tr>
+        @endforeach
+    @endif
 @endforeach

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Devolucion;
+use App\Devolucion_producto;
 use App\Http\Controllers\Controller;
 use App\Movimiento_inventario;
 use App\Pago;
@@ -15,7 +17,7 @@ use App\Venta_producto;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
-class VentaController extends Controller
+class DevolucionController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -52,51 +54,44 @@ class VentaController extends Controller
      */
     protected function create(array $data)
     {
-        $precio = 0;
-        foreach ($data['productos'] as $producto){
-            $validator = $this->validator($producto,Venta::$reglas_productos);
-            //return $validator->errors();
-            if ($validator->fails()) {
-                return ['sucess' => 0, 'errors' => $validator->errors()->first()];
-            }
-            $precio += $producto['precio'] * $producto['cantidad'];
-        }
-        $new = Venta::create([
+        $concepto = Venta_producto::where('id_venta',$data['id_venta'])->where('id_producto',$data['id_producto'])->first();
+        if($concepto['cantidad'] < $data['cantidad'] || $concepto['cantidad'] == 0)
+            return ['success' => 0, 'errors' => 'La cantidad de producto ingresada es mayor a la cantidad en la venta'];
+
+        $concepto->where('id_venta',$data['id_venta'])->where('id_producto',$data['id_producto'])->update(['cantidad'=>$concepto['cantidad']-$data['cantidad']]);
+
+        $new = Devolucion::create([
                 'fecha' => date("Y-m-d H:i:s"),
-                'precio' => $precio,
-                'id_empleado' => $data['id_empleado'],
-                'id_cliente' => $data['id_cliente'],
+                'id_venta' => $data['id_venta'],
+                'descripcion' => $data['descripcion'],
+                'id_producto' => $data['id_producto'],
+                'cantidad' => $data['cantidad'],
+                'precio' => $data['precio'],
         ]);
-        foreach ($data['productos'] as $producto) {
-            Venta_producto::create([
-                'id_venta' => $new['id'],
-                'id_producto' => $producto['id'],
-                'cantidad' => $producto['cantidad'],
-                'precio' => $producto['precio'],
-                ]);
-        };
         Movimiento_inventario::create([
             'fecha' => date("Y-m-d H:i:s"),
-            'tipo' => 'Venta',
-            'cantidad' => 0,
+            'tipo' => 'Devolucion',
+            'cantidad' => $data['cantidad'],
             'id_movimiento'=> $new['id'],
-            'salida' => 1
+            'salida' => 0
         ]);
-
-        return $new;
+        $devoluciones = Devolucion::where('id_venta',$data['id_venta'])->get();
+        return $devoluciones;
     }
 
-    public function addVenta(Request $request)
+    public function addDevolucion(Request $request)
     {
-        $validator = $this->validator($request->all(),Venta::$reglas_crear);
+        $validator = $this->validator($request->all(),Devolucion::$reglas_crear);
         //return $validator->errors();
         if ($validator->fails()) {
-            return ['sucess' => 0, 'errors' => $validator->errors()->first()];
+            return ['success' => 0, 'errors' => $validator->errors()->first()];
         }
 
         $venta = $this->create($request->all());
-
-        return $venta;
+        if(isset($venta['success']))
+            return ['success' => 0, 'errors' => 'La cantidad de producto ingresada es mayor a la cantidad en la venta'];
+        else
+            return view('refunds.components.edit-profile-form',['devoluciones' => $venta]);
     }
 
     /**

@@ -1,8 +1,8 @@
 @if (isset($productos))
     @foreach ($productos as $producto)
-        <tr class="tr-1">
+        <tr class="tr">
             <td>
-                {{$producto['id_producto']}}
+                {{$producto->producto->nombre}}
             </td>
             <td>
                 {{$producto['id_venta']}}
@@ -14,7 +14,10 @@
                 {{$producto['cantidad']}}
             </td>
             <td class="text-primary" style="width: 10%;">
-            <input type="number" value="{{$producto['cantidad']}}" class="form-control" id="">
+            <input type="number" value="{{$producto['cantidad']}}" class="form-control" id="cantidad-{{$producto['id_producto']}}">
+            </td>
+            <td class="text-primary" style="width: 25%;">
+                <input type="text" placeholder="Razón de devolución" class="form-control" id="{{$producto['id_producto']}}">
             </td>
             <td class="text-center">
                 <div class="dropdown">
@@ -25,7 +28,7 @@
                     </a>
                     <div
                         class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#clientes-modal" onclick="fillEditModal({{$producto['id_venta']}})">Devolver</a>
+                        <a class="dropdown-item" href="#" onclick="devolverProducto({{$producto}})">Devolver</a>
                     </div>
                 </div>
             </td>

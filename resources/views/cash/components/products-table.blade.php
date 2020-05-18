@@ -1,13 +1,11 @@
-@foreach ($sales as $sale)
+@foreach ($adjusments as $adjusment)
     <tr>
-        <td>{{$sale->id}}</td>
-        <td>{{$sale->cliente->nombre}}</td>
-        <td>{{$sale->empleado->name}}</td>
+        <td>{{$adjusment['id']}}</td>
         <td>
-            {{$sale['precio']}}
+            {{$adjusment['tipo']}}
         </td>
-        <td>{{$sale['fecha']}}</td>
-        <td>{{$sale['estado']}}</td>
+        <td>{{$adjusment['fecha']}}</td>
+        <td>{{$adjusment['monto']}}</td>
         <td class="text-right">
             <div class="dropdown">
                 <a class="btn btn-sm btn-icon-only text-light" href="#"
@@ -17,7 +15,7 @@
                 </a>
                 <div
                     class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#clientes-modal" onclick="fillEditModal({{$sale->detalles}})">Devolver</a>
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#clientes-modal" onclick="fillEditModal({{$adjusment}})">Edit</a>
                 </div>
             </div>
         </td>

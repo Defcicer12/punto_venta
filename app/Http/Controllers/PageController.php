@@ -111,7 +111,7 @@ class PageController extends Controller
 
     public function adjusment()
     {
-        return view('adjusments.index',['adjusments' => Movimiento_inventario::all()]);
+        return view('adjusments.index',['movements' => Movimiento_inventario::all(),'productos' => Productos::all()]);
     }
 
     public function flux()
@@ -127,6 +127,6 @@ class PageController extends Controller
     public function corte()
     {
         $pagos = Pago::where('tipo','Efectivo')->where('en_caja',1)->whereDay('fecha',date('d'))->get();
-        return view('adjusments.index',['adjusments' => $pagos,'monto_caja'=>$pagos->sum('monto')]);
+        return view('cash.index',['adjusments' => $pagos,'monto_caja'=>$pagos->sum('monto')]);
     }
 }

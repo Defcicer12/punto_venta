@@ -13,42 +13,40 @@
                 <i class="tim-icons icon-lock-circle"></i>
             </div>
         </div>
-        <select id="tipo" onclick="unhideElement()" type="select" name="tipo" class="form-control{{ $errors->has('tipo') ? ' is-invalid' : '' }}">
+        <select type="select" name="tipo" class="form-control{{ $errors->has('tipo') ? ' is-invalid' : '' }}">
             <option style="color:white; background-color:#27293D;" {{ old('tipo') == '' ? 'selected' : '' }}>Tipo</option>
-            <option style="color:white; background-color:#27293D;" {{ old('tipo') == 'Venta' ? 'selected' : '' }}  value="Venta">Venta</option>
-            <option style="color:white; background-color:#27293D;" {{ old('tipo') == 'Devolucion' ? 'selected' : '' }}  value="Devolucion">Devolucion</option>
-            <option style="color:white; background-color:#27293D;" {{ old('tipo') == 'Compra' ? 'selected' : '' }}  value="Compra">Compra</option>
-            <option style="color:white; background-color:#27293D;" {{ old('tipo') == 'Otros' ? 'selected' : '' }}  value="Otros">Otros</option>
+            <option style="color:white; background-color:#27293D;" {{ old('tipo') == 'Compras' ? 'selected' : '' }}  value="Compras">Venta</option>
+            <option style="color:white; background-color:#27293D;" {{ old('tipo') == 'Ventas' ? 'selected' : '' }}  value="Ventas">Devolucion</option>
         </select>
         @include('alerts.feedback', ['field' => 'tipo'])
     </div>
-    <div id="entrada_salida" class="input-group{{ $errors->has('salida') ? ' has-danger' : '' }}">
+    <label>{{ __('producto') }}</label>
+    <div class="input-group{{ $errors->has('tipo') ? ' has-danger' : '' }}">
         <div class="input-group-prepend">
             <div class="input-group-text">
                 <i class="tim-icons icon-lock-circle"></i>
             </div>
         </div>
-        <select type="select" name="salida" class="form-control{{ $errors->has('salida') ? ' is-invalid' : '' }}">
-            <option style="color:white; background-color:#27293D;" {{ old('salida') == '' ? 'selected' : '' }}>Entrada/Salida</option>
-            <option style="color:white; background-color:#27293D;" {{ old('salida') == '0' ? 'selected' : '' }}  value="1">Salida</option>
-            <option style="color:white; background-color:#27293D;" {{ old('salida') == '1' ? 'selected' : '' }}  value="0">Entrada</option>
+        <select type="select" name="tipo" class="form-control{{ $errors->has('tipo') ? ' is-invalid' : '' }}">
+            <option style="color:white; background-color:#27293D;" {{ old('tipo') == '' ? 'selected' : '' }}>Tipo</option>
+            <option style="color:white; background-color:#27293D;" {{ old('tipo') == 'Compras' ? 'selected' : '' }}  value="Compras">Venta</option>
+            <option style="color:white; background-color:#27293D;" {{ old('tipo') == 'Ventas' ? 'selected' : '' }}  value="Ventas">Devolucion</option>
         </select>
-        @include('alerts.feedback', ['field' => 'salida'])
+        @include('alerts.feedback', ['field' => 'tipo'])
     </div>
-    <label>{{ __('Producto') }}</label>
-    <div class="input-group{{ $errors->has('id_producto') ? ' has-danger' : '' }}">
+    <label>{{ __('empleado') }}</label>
+    <div class="input-group{{ $errors->has('tipo') ? ' has-danger' : '' }}">
         <div class="input-group-prepend">
             <div class="input-group-text">
                 <i class="tim-icons icon-lock-circle"></i>
             </div>
         </div>
-        <select type="select" name="id_producto" class="form-control{{ $errors->has('id_producto') ? ' is-invalid' : '' }}">
-            <option style="color:white; background-color:#27293D;" {{ old('id_producto') == '' ? 'selected' : '' }}>Producto</option>
-            @foreach ($productos as $producto)
-                <option style="color:white; background-color:#27293D;" {{ old('id_producto') == $producto->id ? 'selected' : '' }}  value="{{$producto->id}}">{{$producto->nombre}}</option>
-            @endforeach
+        <select type="select" name="tipo" class="form-control{{ $errors->has('tipo') ? ' is-invalid' : '' }}">
+            <option style="color:white; background-color:#27293D;" {{ old('tipo') == '' ? 'selected' : '' }}>Tipo</option>
+            <option style="color:white; background-color:#27293D;" {{ old('tipo') == 'Compras' ? 'selected' : '' }}  value="Compras">Venta</option>
+            <option style="color:white; background-color:#27293D;" {{ old('tipo') == 'Ventas' ? 'selected' : '' }}  value="Ventas">Devolucion</option>
         </select>
-        @include('alerts.feedback', ['field' => 'id_producto'])
+        @include('alerts.feedback', ['field' => 'tipo'])
     </div>
     <label>{{ __('Cantidad') }}</label>
     <div class="input-group{{ $errors->has('cantidad') ? ' has-danger' : '' }}">
@@ -60,7 +58,17 @@
         <input type="number" id="cantidad" name="cantidad" class="form-control{{ $errors->has('cantidad') ? ' is-invalid' : '' }}" placeholder="{{ __('cantidad') }}" value="{{ old('cantidad', '') }}">
         @include('alerts.feedback', ['field' => 'cantidad'])
     </div>
-    <label>{{ __('Descripcion') }}</label>
+    <label>{{ __('Cantidad') }}</label>
+    <div class="input-group{{ $errors->has('cantidad') ? ' has-danger' : '' }}">
+        <div class="input-group-prepend">
+            <div class="input-group-text">
+                <i class="fas fa-dollar-sign"></i>
+            </div>
+        </div>
+        <input type="number" id="cantidad" name="cantidad" class="form-control{{ $errors->has('cantidad') ? ' is-invalid' : '' }}" placeholder="{{ __('cantidad') }}" value="{{ old('cantidad', '') }}">
+        @include('alerts.feedback', ['field' => 'cantidad'])
+    </div>
+    <label>{{ __('descripcion') }}</label>
     <div class="input-group{{ $errors->has('descripcion') ? ' has-danger' : '' }}">
         <div class="input-group-prepend">
             <div class="input-group-text">
@@ -74,13 +82,3 @@
 <div class="card-footer">
     <button type="button" onclick="crearUsuario()" class="btn btn-primary btn-round btn-lg">{{ __('Crear producto') }}</button>
 </div>
-<script>
-    function unhideElement()
-    {
-            if($("#tipo").val() == 'Otros')
-                $('#entrada_salida').show();
-            else
-                $('#entrada_salida').hide();
-
-    }
-</script>

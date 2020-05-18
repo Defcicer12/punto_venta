@@ -45,6 +45,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('client/modal-edit', ['as' => 'components.client-edit-modal', 'uses' => 'ComponentsController@clientEditModal']);
     Route::get('product/modal-edit', ['as' => 'components.product-edit-modal', 'uses' => 'ComponentsController@productEditModal']);
     Route::get('refund/modal-edit', ['as' => 'components.refund-edit-modal', 'uses' => 'ComponentsController@refundEditModal']);
+    Route::get('refund/table-search', ['as' => 'components.refund-table-search', 'uses' => 'ComponentsController@refundtableSearch']);
+
 });
 
 Route::group(['middleware' => 'auth'], function () {
@@ -79,6 +81,15 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('sale/search', ['as' => 'sale.search', 'uses' => 'VentaController@search']);
     Route::get('sale/searchw', ['as' => 'sale.searchw', 'uses' => 'VentaController@searchWithoutReload']);
 	Route::post('sale/create', ['as' => 'sale.create', 'uses' => 'VentaController@addVenta']);
+});
+
+Route::group(['middleware' => 'auth'], function () {
+	Route::get('refund', ['as' => 'refund.edit', 'uses' => 'DevolucionController@edit']);
+    Route::post('refund', ['as' => 'refund.pay', 'uses' => 'DevolucionController@pagar']);
+    Route::put('refund/close', ['as' => 'refund.close', 'uses' => 'DevolucionController@cerrar']);
+    Route::get('refund/search', ['as' => 'refund.search', 'uses' => 'DevolucionController@search']);
+    Route::get('refund/searchw', ['as' => 'refund.searchw', 'uses' => 'DevolucionController@searchWithoutReload']);
+	Route::post('refund/create', ['as' => 'refund.create', 'uses' => 'DevolucionController@addDevolucion']);
 });
 
 Route::group(['middleware' => 'auth'], function () {

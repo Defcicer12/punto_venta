@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Cliente;
+use App\Devolucion;
 use App\Productos;
+use App\Venta;
+use App\Venta_producto;
 use Symfony\Component\HttpFoundation\Request;
 
 class ComponentsController extends Controller
@@ -38,7 +41,26 @@ class ComponentsController extends Controller
 
     public function refundEditModal(Request $request)
     {
+        $detalles = $request->get('detalles');
+        $id_venta = $detalles[0]['id_venta'];
+        $productos = Venta_producto::where('id_venta',$id_venta)->get();
+        $devoluciones = Devolucion::where('id_venta',$id_venta)->get();
         session()->flashInput($request->all());
-        return view('refunds.components.modal-edit',['productos' => $request->get('detalles')]);
+        return view('refunds.components.modal-edit',['productos' => $productos,'suma' => $productos->sum('precio'),'devoluciones' => $devoluciones]);
     }
+
+    public function refundtableSearch(Request $request)
+    {
+        $q= $request->get('q');
+        $sales = Venta::select('venta.id','venta.estado','venta.fecha','venta.id_empleado','venta.id_cliente','venta.precio')
+        ->join('cliente','venta.id_cliente','=','cliente.id')
+        ->join('users','venta.id_empleado','=','users.id')
+        ->where('venta.id','LIKE','%'.$q.'%')
+        ->orWhere('venta.estado','LIKE','%'.$q.'%')
+        ->orWhere('cliente.nombre','LIKE','%'.$q.'%')
+        ->orWhere('users.name','LIKE','%'.$q.'%')
+        ->get();
+        return view('refunds.components.refunds-table', ['sales' => $sales]);
+    }
+
 }

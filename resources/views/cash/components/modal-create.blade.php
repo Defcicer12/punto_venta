@@ -4,7 +4,7 @@
         <h4 class="card-title">{{ __('Inventario') }}</h4>
     </div>
     <form class="form" method="patch" action="{{ route('register-users') }}" id="create-form">
-    @include('inventory.components.create-form')
+    @include('cash.components.create-form')
     </form>
 </div>
 <script>

@@ -22,18 +22,18 @@
         </select>
         @include('alerts.feedback', ['field' => 'tipo'])
     </div>
-    <div id="entrada_salida" class="input-group{{ $errors->has('entrada') ? ' has-danger' : '' }}">
+    <div id="entrada_salida" class="input-group{{ $errors->has('salida') ? ' has-danger' : '' }}">
         <div class="input-group-prepend">
             <div class="input-group-text">
                 <i class="tim-icons icon-lock-circle"></i>
             </div>
         </div>
-        <select type="select" name="entrada" class="form-control{{ $errors->has('entrada') ? ' is-invalid' : '' }}">
-            <option style="color:white; background-color:#27293D;" {{ old('entrada') == '' ? 'selected' : '' }}>Entrada/Salida</option>
-            <option style="color:white; background-color:#27293D;" {{ old('entrada') == '0' ? 'selected' : '' }}  value="0">Salida</option>
-            <option style="color:white; background-color:#27293D;" {{ old('entrada') == '1' ? 'selected' : '' }}  value="1">Entrada</option>
+        <select type="select" name="salida" class="form-control{{ $errors->has('salida') ? ' is-invalid' : '' }}">
+            <option style="color:white; background-color:#27293D;" {{ old('salida') == '' ? 'selected' : '' }}>Entrada/Salida</option>
+            <option style="color:white; background-color:#27293D;" {{ old('salida') == '0' ? 'selected' : '' }}  value="1">Salida</option>
+            <option style="color:white; background-color:#27293D;" {{ old('salida') == '1' ? 'selected' : '' }}  value="0">Entrada</option>
         </select>
-        @include('alerts.feedback', ['field' => 'entrada'])
+        @include('alerts.feedback', ['field' => 'salida'])
     </div>
     <label>{{ __('Producto') }}</label>
     <div class="input-group{{ $errors->has('id_producto') ? ' has-danger' : '' }}">

@@ -26,11 +26,11 @@
                                     <table class="table tablesorter ">
                                         <thead class=" text-primary">
                                             <tr>
-                                                <th scope="col">ID</th>
+                                                <th scope="col">Folio de movimiento</th>
                                                 <th scope="col">TIPO</th>
                                                 <th scope="col">fecha</th>
                                                 <th scope="col">Cantidad</th>
-                                                <th scope="col">Acciones</th>
+                                                <th scope="col">Detalles</th>
                                             </tr>
                                         </thead>
                                         <tbody id="users-table">
@@ -49,22 +49,6 @@
                 </div>
             </div>
     {{-- Modal --}}
-    <div class="modal modal-black fade" id="clientes-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document" style="position: relative; bottom: 20%;">
-            <div class="modal-content" >
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Inventario</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="edit-modal-body">
-                    @include('inventory\components\modal-edit')
-                </div>
-            </div>
-        </div>
-    </div>
-    {{-- Modal2 --}}
     <div class="modal modal-black fade" id="clientes-modal-create" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document" style="position: relative; bottom: 25%;">
             <div class="modal-content" >

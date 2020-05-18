@@ -1,4 +1,4 @@
-@extends('layouts.app', ['page' => __('Devoluciones'), 'pageSlug' => 'devoluciones'])
+@extends('layouts.app', ['page' => __('Administración de productos'), 'pageSlug' => 'ajustes'])
 
 @section('content')
 <body class="">
@@ -10,33 +10,36 @@
                             <div class="card-header">
                                 <div class="row">
                                     <div class="col-2">
-                                        <h4 class="card-title">Devoluciones</h4>
+                                        <h4 class="card-title">Productos</h4>
                                     </div>
                                     <div class="col-8">
-                                        <input type="text" class="form-control" name="q" id="q" placeholder="Buscar Venta" onkeyup="searchWithoutReload()">
+                                        <input type="text" class="form-control" name="q" id="q" placeholder="Buscar productos" onkeyup="searchWithoutReload()">
                                     </div>
-                                    <div class="col" hidden>
-                                        <button type="button" id="clientes" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#clientes-modal-create">Añadir usuario</button>
+                                    <div class="col">
+                                        <button type="button" id="clientes" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#clientes-modal-create">Recoger efectivo</button>
                                     </div>
                                 </div>
                             </div>
                             <div class="card-body">
-
+                            @if ($monto_caja > 20000)
+                                <div class="alert alert-danger" role="alert">
+                                    {{ __('Se debe recoger el monto en caja') }}
+                                </div>
+                            @endif
+                            <h4 class="card-title">Monto en caja: {{ $monto_caja }}</h4>
                                 <div class="">
                                     <table class="table tablesorter ">
                                         <thead class=" text-primary">
                                             <tr>
-                                                <th scope="col">Folio</th>
-                                                <th scope="col">Cliente</th>
-                                                <th scope="col">Empleado</th>
-                                                <th scope="col">Precio</th>
-                                                <th scope="col">Fecha</th>
-                                                <th scope="col">Estado</th>
+                                                <th scope="col">ID</th>
+                                                <th scope="col">TIPO</th>
+                                                <th scope="col">fecha</th>
+                                                <th scope="col">Monto</th>
                                                 <th scope="col">Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody id="users-table">
-                                            @include('refunds.components.refunds-table')
+                                            @include('cash.components.products-table')
                                         </tbody>
                                     </table>
                                 </div>
@@ -52,16 +55,16 @@
             </div>
     {{-- Modal --}}
     <div class="modal modal-black fade" id="clientes-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document" style="position: relative; bottom: 0%;">
+        <div class="modal-dialog modal-lg" role="document" style="position: relative; bottom: 20%;">
             <div class="modal-content" >
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Usuarios</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Inventario</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body" id="edit-modal-body">
-                    @include('refunds\components\modal-edit')
+                    @include('cash\components\modal-edit')
                 </div>
             </div>
         </div>
@@ -71,13 +74,13 @@
         <div class="modal-dialog modal-lg" role="document" style="position: relative; bottom: 25%;">
             <div class="modal-content" >
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Usuarios</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Inventario</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    @include('refunds\components\modal-create')
+                    @include('cash\components\modal-create')
                 </div>
             </div>
         </div>
@@ -91,7 +94,7 @@
         search  = await $('#q').val();
         await $.ajax({
             type: "GET",
-            url: "{{ route('components.refund-table-search') }}",
+            url: "{{ route('user.components.users-table') }}",
             data: {q: search},
             success: function(response){
                             $('#users-table').html(response)
@@ -99,12 +102,11 @@
         });
     }
     async function fillEditModal(user){
-        //searchw: http://punto_venta.test/product/searchw
         console.log(user)
         await $.ajax({
             type: "GET",
-            url: "{{ route('components.refund-edit-modal') }}",
-            data: {detalles: user},
+            url: "{{ route('components.product-edit-modal') }}",
+            data: user,
             success: function(response){
                             $('#edit-modal-body').html(response)
                         }
@@ -114,31 +116,13 @@
     async function reloadTable(){
         await $.ajax({
             type: "GET",
-            url: "{{ route('components.refund-table-search') }}",
+            url: "{{ route('user.components.users-table') }}",
             data: {q: ''},
             success: function(response){
                             $('#users-table').html(response)
                         }
         });
     }
-
-    //notificacion
-    function showNotification(message,type) {
-    color = Math.floor((Math.random() * 4) + 1);
-
-    $.notify({
-      icon: "tim-icons icon-bell-55",
-      message: message
-
-    }, {
-      type: type,
-      timer: 5000,
-      placement: {
-        from: 'top',
-        align: 'center'
-      }
-    });
-  }
 </script>
 @stack('js')
 @endsection
