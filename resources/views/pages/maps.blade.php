@@ -150,9 +150,9 @@
             <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <div class="modal-body">
-            clientes
-        </div>
+        <tbody id="t-body-clientes" class="modal-body">
+            @include('pages.modal.clients.modal')
+        </tbody>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             <button type="button" class="btn btn-primary">Save changes</button>

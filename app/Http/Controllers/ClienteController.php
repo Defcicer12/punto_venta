@@ -2,15 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Cliente;
 use App\Http\Controllers\Controller;
-use App\Productos;
-use App\Proveedor;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use App\Rules\Custom_email;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use PHPUnit\Util\Json;
 
 class ClienteController extends Controller
 {
@@ -22,11 +18,6 @@ class ClienteController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-    }
-
-    public function visual()
-    {
-        return view('create.productos',['proveedores' => Proveedor::all()]);
     }
 
     /**
@@ -55,11 +46,12 @@ class ClienteController extends Controller
     protected function create(array $data)
     {
 
-        $new = Pago::create([
-                'fecha' => date("Y-m-d H:i:s"),
-                'tipo' => $data['tipo'],
-                'monto' => $data['monto'],
-                'id_venta' => $data['id_venta'],
+        $new = Cliente::create([
+                'nombre' => $data['nombre'],
+                'telefono' => $data['telefono'],
+                'correo' => $data['correo'],
+                'direccion' => $data['direccion'],
+                'rfc' => $data['rfc']
         ]);
 
         return ['new' =>$new,'data'=>[],'errors' => 'Venta pagada'];
@@ -84,9 +76,9 @@ class ClienteController extends Controller
      */
     public function update(Request $request)
     {
-        Venta::whereId($request->get('id_venta'))->update($request->all());
+        Cliente::whereId($request->get('id_venta'))->update($request->all());
 
-        return back()->withStatus(__('Profile successfully updated.'));
+        return back()->withStatus(__('Client successfully updated.'));
     }
 
     public function search(Request $r)
