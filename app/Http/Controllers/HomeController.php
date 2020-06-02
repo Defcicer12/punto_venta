@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Devolucion;
+use App\Flujo_efectivo;
 use App\Pago;
 use App\Venta;
 
@@ -25,10 +26,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $pagosPorTipo = Pago::selectRaw('tipo,sum(monto) as monto')->groupBy('tipo')->get();
+        $pagosPorTipo = Pago::selectRaw('tipo,sum(monto) as monto')->groupBy('tipo')->whereDay('fecha',date('d'))->get();
 
-        $pagosPorMes = Pago::selectRaw('sum(monto) as monto,MONTH(fecha) as mes')->groupBy('mes')->orderBy('mes', 'ASC')->get();
+        $pagosPorMes = Pago::selectRaw('sum(monto) as monto,HOUR(fecha) as hora')->groupBy('hora')->orderBy('hora', 'ASC')->whereDay('fecha',date('d'))->get();
 
-        return view('dashboard',['devoluciones' =>Devolucion::all(),'total'=> Pago::all()->sum('monto'),'montos' => $pagosPorTipo->pluck('monto'),'pagos' =>$pagosPorMes->pluck('monto')]);
+        return view('dashboard',['devoluciones' =>Devolucion::whereDay('fecha',date('d'))->get(),'total'=> Pago::whereDay('fecha',date('d'))->sum('monto'),'montos' => $pagosPorTipo->pluck('monto'),'pagos' =>$pagosPorMes->pluck('monto'),'horas' => $pagosPorMes->pluck('hora'),'flujos' => Flujo_efectivo::whereDay('fecha',date('d'))->get()]);
     }
 }

@@ -11,7 +11,7 @@
                     {{ __('Updivision') }}
                 </a>
             </li>
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a href="#" class="nav-link">
                     {{ __('About Us') }}
                 </a>
@@ -20,7 +20,7 @@
                 <a href="#" class="nav-link">
                     {{ __('Blog') }}
                 </a>
-            </li>
+            </li> --}}
         </ul>
         <div class="copyright">
             &copy; {{ now()->year }} {{ __('made with') }} <i class="tim-icons icon-heart-2"></i> {{ __('by') }}

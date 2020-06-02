@@ -911,7 +911,7 @@ demo = {
         });
     },
 
-    initBigChart: function(chart_data) {
+    initBigChart: function(chart_data,labels) {
 
         gradientChartOptionsConfigurationWithTooltipPurple = {
             maintainAspectRatio: false,
@@ -961,7 +961,7 @@ demo = {
             }
         };
 
-        var chart_labels = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+        var chart_labels = labels;
         // var chart_data = [100, 70, 90, 70, 85, 60, 75, 60, 90, 80, 110, 100];
 
         var ctx = document.getElementById("chartBig1").getContext('2d');
@@ -976,7 +976,7 @@ demo = {
         data: {
             labels: chart_labels,
             datasets: [{
-            label: "Pagos por mes",
+            label: "Pagos por hora",
             fill: true,
             backgroundColor: gradientStroke,
             borderColor: '#d346b1',

@@ -71,7 +71,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('client', ['as' => 'client.update', 'uses' => 'ClienteController@update']);
     Route::get('client/search', ['as' => 'client.search', 'uses' => 'ClienteController@search']);
     Route::get('client/searchw', ['as' => 'client.searchw', 'uses' => 'ClienteController@searchWithoutReload']);
-	Route::put('client/password', ['as' => 'client.password', 'uses' => 'ClienteController@password']);
+    Route::put('client/password', ['as' => 'client.password', 'uses' => 'ClienteController@password']);
+    Route::post('client/create', ['as' => 'client.create', 'uses' => 'ClienteController@addCliente']);
 });
 
 Route::group(['middleware' => 'auth'], function () {
