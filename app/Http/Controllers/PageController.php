@@ -30,7 +30,8 @@ class PageController extends Controller
     {
         return view('pages.maps',[
             'productos' => Productos::all(),
-            'clientes' => Cliente::all()
+            'clientes' => Cliente::all(),
+            'empleado' => auth()->user()
         ]);
     }
 

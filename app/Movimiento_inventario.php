@@ -28,6 +28,7 @@ class Movimiento_inventario extends Model
     protected $fillable = [
         'fecha',
         'tipo',
+        'descripcion',
         'cantidad',
         'id_movimiento',
         'salida'

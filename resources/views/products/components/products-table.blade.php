@@ -4,9 +4,7 @@
         <td>
             {{$product['precio']}}
         </td>
-        <td>{{$product['existencia']}}</td>
-        <td>{{$product['cantidad_minima']}}</td>
-        <td>{{$product['cantidad_maxima']}}</td>
+        <td>{{$product['descripcion']}}</td>
         <td class="text-right">
             <div class="dropdown">
                 <a class="btn btn-sm btn-icon-only text-light" href="#"

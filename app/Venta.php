@@ -30,7 +30,7 @@ class Venta extends Model
     ];
     public static $reglas_productos = [
         'id' => ['required', 'numeric', 'exists:producto,id'],
-        'cantidad' => ['required', 'numeric','gt:0'],
+        'cantidad' => ['required', 'numeric','gt:0',],
         'precio' => ['required','numeric'],
     ];
     protected $table = 'venta';

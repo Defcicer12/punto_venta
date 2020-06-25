@@ -8,7 +8,7 @@
                 {{$producto['id_venta']}}
             </td>
             <td>
-                {{$producto['precio']}}
+                {{$producto['precio']*1.16}}
             </td>
             <td>
                 {{$producto['cantidad']}}

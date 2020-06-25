@@ -62,5 +62,22 @@ class ComponentsController extends Controller
         ->get();
         return view('refunds.components.refunds-table', ['sales' => $sales]);
     }
+    public function clientSelect()
+    {
+        $clientes = Cliente::all();
+        return view('pages\components\clients-select',['clientes' => $clientes]);
+    }
+    public function saleTotals(Request $r)
+    {
+        $data= $r->all();
+        $iva = $data['subtotal'] * 0.16;
+        $importe = $iva+$data['subtotal'];
+        return view('pages\components\total-layer',['subtotal' => $data['subtotal'],'iva' => $iva, 'importe' => $importe]);
+    }
+    public function productTable()
+    {
+        $clientes = Productos::all();
+        return view('products\components\products-table',['products' => $clientes]);
+    }
 
 }

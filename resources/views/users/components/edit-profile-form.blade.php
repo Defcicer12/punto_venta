@@ -26,19 +26,19 @@
             <input type="email" id="email" name="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="{{ __('Email') }}" value="{{ old('email', '') }}">
             @include('alerts.feedback', ['field' => 'email'])
         </div>
-        <div class="input-group{{ $errors->has('departamento') ? ' has-danger' : '' }}">
+        <div class="input-group{{ $errors->has('tipo') ? ' has-danger' : '' }}">
             <div class="input-group-prepend">
                 <div class="input-group-text">
                     <i class="tim-icons icon-lock-circle"></i>
                 </div>
             </div>
-            <select type="select" name="departamento" class="form-control{{ $errors->has('departamento') ? ' is-invalid' : '' }}">
-                <option style="color:white; background-color:#27293D;" {{ old('departamento') == '' ? 'selected' : '' }}>Departamento</option>
-                <option style="color:white; background-color:#27293D;" {{ old('departamento') == 'Compras' ? 'selected' : '' }}  value="Compras">Compras</option>
-                <option style="color:white; background-color:#27293D;" {{ old('departamento') == 'Ventas' ? 'selected' : '' }}  value="Ventas">Ventas</option>
-                <option style="color:white; background-color:#27293D;" {{ old('departamento') == 'Almacen' ? 'selected' : '' }}  value="Almacen">Almacen</option>
+            <select type="select" name="tipo" class="form-control{{ $errors->has('tipo') ? ' is-invalid' : '' }}">
+                <option style="color:white; background-color:#27293D;" {{ old('tipo') == '' ? 'selected' : '' }}>Tipo</option>
+                <option style="color:white; background-color:#27293D;" {{ old('tipo') == 'Técnico' ? 'selected' : '' }} value="Técnico">Técnico</option>
+                <option style="color:white; background-color:#27293D;" {{ old('tipo') == 'Gerente' ? 'selected' : '' }} value="Gerente">Gerente</option>
+                <option style="color:white; background-color:#27293D;" {{ old('tipo') == 'Almacén' ? 'selected' : '' }} value="Almacén">Almacén</option>
             </select>
-            @include('alerts.feedback', ['field' => 'departamento'])
+            @include('alerts.feedback', ['field' => 'tipo'])
         </div>
         <div class="input-group{{ $errors->has('telefono') ? ' has-danger' : '' }}">
             <div class="input-group-prepend">

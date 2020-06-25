@@ -22,7 +22,7 @@ class User extends Authenticatable
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users', new Custom_email],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'departamento' => ['required', 'string', 'in:Compras,Ventas,Almacen'],
+            'tipo' => ['required', 'string', 'in:Gerente,Técnico,Almacén'],
             'telefono' => ['required', 'numeric', 'digits:10'],
         ];
     }
@@ -32,7 +32,7 @@ class User extends Authenticatable
             'name' => ['nullable', 'string', 'max:255'],
             'email' => ['nullable', 'string', 'email', 'max:255', 'unique:users', new Custom_email],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
-            'departamento' => ['nullable', 'string', 'in:Compras,Ventas,Almacen'],
+            'tipo' => ['nullable', 'string', 'in:Gerente,Técnico,Almacén'],
             'telefono' => ['nullable', 'numeric', 'digits:10'],
         ];
     }
@@ -42,7 +42,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','departamento','telefono'
+        'name', 'email', 'password','tipo','telefono'
     ];
 
     /**

@@ -1,6 +1,7 @@
 @foreach ($movements as $movement)
     @if ($movement['tipo'] == 'Devolucion')
     <tr>
+        <td>{{$movement->id}}</td>
         <td>{{$movement->movimiento->id}}</td>
         <td>
             {{$movement['tipo']}}
@@ -15,6 +16,7 @@
     @if ($movement['tipo'] == 'Venta')
         @foreach ($movement->movimiento->detalles as $detalle)
             <tr>
+                <td>{{$movement->id}}</td>
                 <td>{{$movement->movimiento->id}}</td>
                 <td>
                     {{$movement['tipo']}}
@@ -26,5 +28,19 @@
                 </td>
             </tr>
         @endforeach
+    @endif
+    @if ($movement['tipo'] == 'Compra' || $movement['tipo'] == 'Otros')
+    <tr>
+        <td>{{$movement->id}}</td>
+        <td>{{$movement->movimiento->id}}</td>
+        <td>
+            {{$movement['tipo']}}
+        </td>
+        <td>{{$movement['fecha']}}</td>
+        <td>{{ $movement['salida'] == 1 ? '-' : '+' }}{{$movement->cantidad}}</td>
+        <td>
+            {{$movement->movimiento->nombre}}
+        </td>
+    </tr>
     @endif
 @endforeach

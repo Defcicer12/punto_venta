@@ -1,4 +1,4 @@
-@extends('layouts.app', ['page' => __('Administración de productos'), 'pageSlug' => 'sales'])
+@extends('layouts.app', ['page' => __('Administración de Ventas'), 'pageSlug' => 'sales'])
 
 @section('content')
 <body class="">
@@ -10,13 +10,13 @@
                             <div class="card-header">
                                 <div class="row">
                                     <div class="col-2">
-                                        <h4 class="card-title">Users</h4>
+                                        <h4 class="card-title">Ventas</h4>
                                     </div>
                                     <div class="col-8">
                                         <input type="text" class="form-control" name="q" id="q" placeholder="Buscar productos" onkeyup="searchWithoutReload()">
                                     </div>
                                     <div class="col">
-                                        <button type="button" id="clientes" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#clientes-modal-create">Añadir usuario</button>
+
                                     </div>
                                 </div>
                             </div>
@@ -30,7 +30,6 @@
                                                 <th scope="col">empleado</th>
                                                 <th scope="col">cliente</th>
                                                 <th scope="col">estado</th>
-                                                <th scope="col">Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody id="users-table">

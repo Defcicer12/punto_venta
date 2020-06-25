@@ -8,7 +8,7 @@
                 <tr>
                     <th scope="col">Producto</th>
                     <th scope="col">folio venta</th>
-                    <th scope="col">Precio</th>
+                    <th scope="col">Importe</th>
                     <th scope="col">Cantidad</th>
                     <th scope="col">Cantidad a devolver</th>
                     <th scope="col">Razón</th>

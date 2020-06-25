@@ -4,7 +4,7 @@
         <td>
             <a href="mailto:{{$user['email']}}">{{$user['email']}}</a>
         </td>
-        <td>{{$user['departamento']}}</td>
+        <td>{{$user['tipo']}}</td>
         <td>{{$user['telefono']}}</td>
         <td class="text-right">
             <div class="dropdown">

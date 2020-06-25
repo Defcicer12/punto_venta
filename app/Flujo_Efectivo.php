@@ -18,7 +18,8 @@ class Flujo_efectivo extends Model
      */
     protected $fillable = [
         'fecha',
-        'monto'
+        'monto',
+        'id_vendedor'
     ];
 
 

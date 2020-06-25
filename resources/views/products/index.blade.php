@@ -1,4 +1,4 @@
-@extends('layouts.app', ['page' => __('Administración de productos'), 'pageSlug' => 'productos'])
+@extends('layouts.app', ['page' => __('Administración de insumos'), 'pageSlug' => 'productos'])
 
 @section('content')
 <body class="">
@@ -10,13 +10,13 @@
                             <div class="card-header">
                                 <div class="row">
                                     <div class="col-2">
-                                        <h4 class="card-title">Productos</h4>
+                                        <h4 class="card-title">Insumos</h4>
                                     </div>
                                     <div class="col-8">
-                                        <input type="text" class="form-control" name="q" id="q" placeholder="Buscar productos" onkeyup="searchWithoutReload()">
+                                        <input type="text" class="form-control" name="q" id="q" placeholder="Buscar insumos" onkeyup="searchWithoutReload()">
                                     </div>
                                     <div class="col">
-                                        <button type="button" id="clientes" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#clientes-modal-create">Añadir producto</button>
+                                        <button type="button" id="clientes" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#clientes-modal-create">Añadir insumo</button>
                                     </div>
                                 </div>
                             </div>
@@ -28,10 +28,7 @@
                                             <tr>
                                                 <th scope="col">Nombre</th>
                                                 <th scope="col">Precio</th>
-                                                <th scope="col">Existencia</th>
-                                                <th scope="col">Cantidad minima</th>
-                                                <th scope="col">Cantidad maxima</th>
-                                                <th scope="col">Acciones</th>
+                                                <th scope="col">Descripción</th>
                                             </tr>
                                         </thead>
                                         <tbody id="users-table">
@@ -112,7 +109,7 @@
     async function reloadTable(){
         await $.ajax({
             type: "GET",
-            url: "{{ route('user.components.users-table') }}",
+            url: "{{ route('components.products-table') }}",
             data: {q: ''},
             success: function(response){
                             $('#users-table').html(response)

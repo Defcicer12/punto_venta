@@ -1,56 +1,52 @@
-<div class="card-body">
+<div class="card-body" id= "create-client-card">
     @csrf
-    @method('put')
 
     @include('alerts.success')
-
-    <div class="input-group{{ $errors->has('id') ? ' has-danger' : '' }}" hidden>
-        <input type="text" name="id" class="form-control{{ $errors->has('id') ? ' is-invalid' : '' }}" placeholder="{{ __('id') }}" value="{{ old('id', '') }}">
-        @include('alerts.feedback', ['field' => 'id'])
-    </div>
-    <div class="input-group{{ $errors->has('name') ? ' has-danger' : '' }}">
+    <div class="input-group{{ $errors->has('nombre') ? ' has-danger' : '' }}">
         <div class="input-group-prepend">
             <div class="input-group-text">
                 <i class="tim-icons icon-single-02"></i>
             </div>
         </div>
-        <input type="text" name="name" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ __('Name') }}" value="{{ old('name', '') }}">
-        @include('alerts.feedback', ['field' => 'name'])
+        <input type="text" name="nombre" class="form-control{{ $errors->has('nombre') ? ' is-invalid' : '' }}" placeholder="{{ __('Name') }}" value="{{ old('nombre', '') }}">
+        @include('alerts.feedback', ['field' => 'nombre'])
     </div>
-    <div class="input-group{{ $errors->has('email') ? ' has-danger' : '' }}">
+    <div class="input-group{{ $errors->has('correo') ? ' has-danger' : '' }}">
         <div class="input-group-prepend">
             <div class="input-group-text">
                 <i class="tim-icons icon-email-85"></i>
             </div>
         </div>
-        <input type="email" id="email" name="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="{{ __('Email') }}" value="{{ old('email', '') }}">
-        @include('alerts.feedback', ['field' => 'email'])
+        <input type="email" id="correo" name="correo" class="form-control{{ $errors->has('correo') ? ' is-invalid' : '' }}" placeholder="{{ __('Correo') }}" value="{{ old('correo', '') }}">
+        @include('alerts.feedback', ['field' => 'correo'])
     </div>
-    <div class="input-group{{ $errors->has('departamento') ? ' has-danger' : '' }}">
+    <div class="input-group{{ $errors->has('telefono') ? ' has-danger' : '' }}">
         <div class="input-group-prepend">
             <div class="input-group-text">
                 <i class="tim-icons icon-lock-circle"></i>
             </div>
         </div>
-        <select type="select" name="departamento" class="form-control{{ $errors->has('departamento') ? ' is-invalid' : '' }}">
-            <option style="color:white; background-color:#27293D;" {{ old('departamento') == '' ? 'selected' : '' }}>Departamento</option>
-            <option style="color:white; background-color:#27293D;" {{ old('departamento') == 'Compras' ? 'selected' : '' }}  value="Compras">Compras</option>
-            <option style="color:white; background-color:#27293D;" {{ old('departamento') == 'Ventas' ? 'selected' : '' }}  value="Ventas">Ventas</option>
-            <option style="color:white; background-color:#27293D;" {{ old('departamento') == 'Almacen' ? 'selected' : '' }}  value="Almacen">Almacen</option>
-        </select>
-        @include('alerts.feedback', ['field' => 'departamento'])
+        <input type="number" name="telefono" class="form-control{{ $errors->has('telefono') ? ' is-invalid' : '' }}" placeholder="{{ __('Telefono') }}" value="{{ old('telefono', '') }}">
+        @include('alerts.feedback', ['field' => 'telefono'])
     </div>
-    <div class="input-group{{ $errors->has('telefono') ? ' has-danger' : '' }}">
+    <div class="input-group{{ $errors->has('direccion') ? ' has-danger' : '' }}">
         <div class="input-group-prepend">
             <div class="input-group-text">
                 <i class="tim-icons icon-single-02"></i>
             </div>
         </div>
-        <input type="number" name="telefono" class="form-control{{ $errors->has('telefono') ? ' is-invalid' : '' }}" placeholder="{{ __('Telefono') }}" value="{{ old('telefono', '') }}">
-        @include('alerts.feedback', ['field' => 'telefono'])
+        <input type="text" name="direccion" class="form-control{{ $errors->has('direccion') ? ' is-invalid' : '' }}" placeholder="{{ __('Direccion') }}" value="{{ old('direccion', '') }}">
+        @include('alerts.feedback', ['field' => 'direccion'])
     </div>
-</div>
-<div class="card-footer">
-<button type="button" class="btn btn-fill btn-primary" onclick="editarUsuario()">{{ __('Save') }}</button>
-</div>
+    <div class="input-group{{ $errors->has('rfc') ? ' has-danger' : '' }}">
+        <div class="input-group-prepend">
+            <div class="input-group-text">
+                <i class="tim-icons icon-single-02"></i>
+            </div>
+        </div>
+        <input type="text" name="rfc" class="form-control{{ $errors->has('rfc') ? ' is-invalid' : '' }}" placeholder="{{ __('Rfc') }}" value="{{ old('rfc', '') }}">
+        @include('alerts.feedback', ['field' => 'rfc'])
+    </div>
+<button type="button" class="btn btn-fill btn-primary" onclick="crearCliente()">{{ __('Crear cliente') }}</button>
 
+</div>

@@ -13,10 +13,10 @@
         console.log(data);
         await $.ajax({
             type: "POST",
-            url: "{{ route('register-users') }}",
+            url: "{{ route('movement.create') }}",
             data: data,
             success: function(response){
-                            $('#register-card').html(response)
+                            $('#create-form').html(response)
 
                         }
         });

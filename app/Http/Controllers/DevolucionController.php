@@ -76,6 +76,10 @@ class DevolucionController extends Controller
             'salida' => 0
         ]);
         $devoluciones = Devolucion::where('id_venta',$data['id_venta'])->get();
+        if(Venta::whereId($data['id_venta'])->first()->cantidad)
+            Venta::whereId($data['id_venta'])->update(['estado' => 'Devuelta parcialmente']);
+        else
+            Venta::whereId($data['id_venta'])->update(['estado' => 'Devuelta']);
         return $devoluciones;
     }
 

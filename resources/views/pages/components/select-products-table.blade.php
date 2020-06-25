@@ -1,10 +1,16 @@
 @if(isset($productos))
     @foreach ($productos as $producto)
-        <div class="font-icon-list col-lg-2 col-md-3 col-sm-4 col-xs-6 col-xs-6"
+        <div class="font-icon-list col-lg-2 col-md-3 col-sm-4 col-xs-6 col-xs-6" style="padding-bottom: 0px;"
             onclick="addProducto({{$producto}})">
-            <div class="font-icon-detail" id="{{$producto->id}}">
-                <i class="tim-icons icon-alert-circle-exc"></i>
-                <p>{{$producto['nombre']}}</p>
+            <div class="font-icon-detail" style="padding-bottom: 0px;" id="{{$producto->id}}">
+                <p style="position:relative;
+                top:-75px; font-size: 14px; padding-bottom: 0px;">ID: {{$producto['id']}}
+                    <br>
+                    Nombre: {{$producto['nombre']}}
+                    <br>
+                    Precio: {{$producto['precio']}}
+                    <br>
+                    Existencia: {{$producto['existencia']}}</p>
             </div>
         </div>
     @endforeach

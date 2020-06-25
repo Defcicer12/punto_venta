@@ -1,11 +1,11 @@
 <div class="sidebar">
     <div class="sidebar-wrapper">
         <div class="logo">
-            <a href="#" class="simple-text logo-mini">{{ __('PT') }}</a>
-            <a href="#" class="simple-text logo-normal">{{ __('Punto Venta') }}</a>
+            <a href="#" class="simple-text logo-mini">{{ __('OS') }}</a>
+            <a href="#" class="simple-text logo-normal">{{ __('Siempre fallan') }}</a>
         </div>
         <ul class="nav">
-            <li @if ($pageSlug=='Corte de caja' ) class="active " @endif>
+            {{-- <li @if ($pageSlug=='Corte de caja' ) class="active " @endif>
                 <a href="{{ route('home') }}">
                     <i class="tim-icons icon-chart-pie-36"></i>
                     <p>{{ __('Corte de caja') }}</p>
@@ -16,11 +16,11 @@
                     <i class="tim-icons icon-chart-pie-36"></i>
                     <p>{{ __('Flujo de efectivo') }}</p>
                 </a>
-            </li>
+            </li> --}}
             <li>
                 <a data-toggle="collapse" href="#laravel-examples" aria-expanded="true">
                     <i class="fab fa-laravel"></i>
-                    <span class="nav-link-text">{{ __('Usuarios') }}</span>
+                    <span class="nav-link-text">{{ __('Empleados') }}</span>
                     <b class="caret mt-1"></b>
                 </a>
 
@@ -44,7 +44,7 @@
             <li>
                 <a data-toggle="collapse" href="#Caja" aria-expanded="true">
                     <i class="tim-icons icon-bag-16"></i>
-                    <span class="nav-link-text">{{ __('Cajero') }}</span>
+                    <span class="nav-link-text">{{ __('Ordenes de servicio') }}</span>
                     <b class="caret mt-1"></b>
                 </a>
 
@@ -68,7 +68,7 @@
             <li>
                 <a data-toggle="collapse" href="#Productos" aria-expanded="true">
                     <i class="tim-icons icon-basket-simple"></i>
-                    <span class="nav-link-text">{{ __('Productos') }}</span>
+                    <span class="nav-link-text">{{ __('Insumos') }}</span>
                     <b class="caret mt-1"></b>
                 </a>
 
@@ -80,7 +80,7 @@
                                 <p>{{ __('Administración') }}</p>
                             </a>
                         </li>
-                        <li @if ($pageSlug=='inventario' ) class="active " @endif>
+                        {{-- <li @if ($pageSlug=='inventario' ) class="active " @endif>
                             <a href="{{ route('pages.inventory') }}">
                                 <i class="tim-icons icon-bullet-list-67"></i>
                                 <p>{{ __('inventario') }}</p>
@@ -91,7 +91,7 @@
                                 <i class="tim-icons icon-bullet-list-67"></i>
                                 <p>{{ __('Ajuste de inventario') }}</p>
                             </a>
-                        </li>
+                        </li> --}}
                     </ul>
                 </div>
 
@@ -114,7 +114,7 @@
                     </ul>
                 </div>
             </li>
-            <li>
+            {{-- <li>
                 <a data-toggle="collapse" href="#Ventas" aria-expanded="true">
                     <i class="tim-icons icon-book-bookmark"></i>
                     <span class="nav-link-text">{{ __('Ventas') }}</span>
@@ -131,13 +131,13 @@
                         </li>
                     </ul>
                 </div>
-            </li>
-            <li @if ($pageSlug=='icons' ) class="active " @endif>
+            </li> --}}
+            {{-- <li @if ($pageSlug=='icons' ) class="active " @endif>
                 <a href="{{ route('pages.icons') }}">
                     <i class="tim-icons icon-atom"></i>
                     <p>{{ __('Icons') }}</p>
                 </a>
-            </li>
+            </li> --}}
             {{-- <li @if ($pageSlug=='notifications' ) class="active " @endif>
                 <a href="{{ route('pages.notifications') }}">
                     <i class="tim-icons icon-bell-55"></i>

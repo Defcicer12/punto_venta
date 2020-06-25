@@ -59,11 +59,14 @@ class VentaController extends Controller
             if ($validator->fails()) {
                 return ['sucess' => 0, 'errors' => $validator->errors()->first()];
             }
-            $precio += $producto['precio'] * $producto['cantidad'];
+            $check = Productos::whereId($producto['id'])->first();
+            if($check['existencia']<$producto['cantidad'])
+                return ['sucess' => 0, 'errors' => 'La cantidad del producto '.$check['nombre'].' sobrepasa la existencia'];
+
         }
         $new = Venta::create([
                 'fecha' => date("Y-m-d H:i:s"),
-                'precio' => $precio,
+                'precio' =>  round($data['precio'],2),
                 'id_empleado' => $data['id_empleado'],
                 'id_cliente' => $data['id_cliente'],
         ]);
@@ -74,14 +77,15 @@ class VentaController extends Controller
                 'cantidad' => $producto['cantidad'],
                 'precio' => $producto['precio'],
                 ]);
+            Movimiento_inventario::create([
+                'fecha' => date("Y-m-d H:i:s"),
+                'tipo' => 'Venta',
+                'cantidad' => $producto['cantidad'],
+                'id_movimiento'=> $new['id'],
+                'salida' => 1
+            ]);
+            Productos::whereId($producto['id'])->decrement('cantidad',$producto['cantidad']);
         };
-        Movimiento_inventario::create([
-            'fecha' => date("Y-m-d H:i:s"),
-            'tipo' => 'Venta',
-            'cantidad' => 0,
-            'id_movimiento'=> $new['id'],
-            'salida' => 1
-        ]);
 
         return $new;
     }
@@ -89,6 +93,7 @@ class VentaController extends Controller
     public function addVenta(Request $request)
     {
         $validator = $this->validator($request->all(),Venta::$reglas_crear);
+
         //return $validator->errors();
         if ($validator->fails()) {
             return ['sucess' => 0, 'errors' => $validator->errors()->first()];

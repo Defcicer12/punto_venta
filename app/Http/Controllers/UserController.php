@@ -26,7 +26,7 @@ class UserController extends Controller
         $q= $request->get('q');
         $users = User::where('name','LIKE','%'.$q.'%')
         ->orWhere('email','LIKE','%'.$q.'%')
-        ->orWhere('departamento','LIKE','%'.$q.'%')
+        ->orWhere('tipo','LIKE','%'.$q.'%')
         ->orWhere('telefono','LIKE','%'.$q.'%')
         ->get();
         return view('users.components.users-table', ['users' => $users]);

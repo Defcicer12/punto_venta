@@ -15,7 +15,7 @@
                     Existencia
                 </th>
                 <th>
-                    Precio
+                    Importe
                 </th>
                 <th>
                     Cantidad

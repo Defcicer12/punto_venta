@@ -21,7 +21,7 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                            @if ($monto_caja > 20000)
+                            @if ($monto_caja > 10000)
                                 <div class="alert alert-danger" role="alert">
                                     {{ __('Se debe recoger el monto en caja') }}
                                 </div>

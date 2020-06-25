@@ -11,7 +11,7 @@
         data  = await $('#modal-edit-form').serialize();
         await $.ajax({
             type: "PUT",
-            url: "{{ route('profile.updateSeparate') }}",
+            url: "{{ route('product.update') }}",
             data: data,
             success: function(response){
                             reloadTable();

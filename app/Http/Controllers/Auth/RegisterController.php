@@ -55,7 +55,7 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users', new Custom_email],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'departamento' => ['required', 'string', 'in:Compras,Ventas,Almacén'],
+            'tipo' => ['required', 'string', 'in:Gerente,Técnico,Almacén'],
             'telefono' => ['required', 'numeric', 'digits:10'],
         ]);
     }
@@ -72,7 +72,7 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'departamento' => $data['departamento'],
+            'tipo' => $data['tipo'],
             'telefono' => $data['telefono'],
         ]);
     }
@@ -85,7 +85,7 @@ class RegisterController extends Controller
             $data = $request->all();
             $data['success'] = 0;
             session()->flashInput($data);
-            return view('users\components\modal-create')
+            return $validator->errors();view('users\components\modal-create')
             ->withErrors($validator->errors())
             ->withInput($request->all());
         }

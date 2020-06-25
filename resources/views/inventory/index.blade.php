@@ -26,6 +26,7 @@
                                     <table class="table tablesorter ">
                                         <thead class=" text-primary">
                                             <tr>
+                                                <th scope="col">Folio</th>
                                                 <th scope="col">Folio de movimiento</th>
                                                 <th scope="col">TIPO</th>
                                                 <th scope="col">fecha</th>
@@ -78,7 +79,7 @@
         search  = await $('#q').val();
         await $.ajax({
             type: "GET",
-            url: "{{ route('user.components.users-table') }}",
+            url: "{{ route('movement.searchw') }}",
             data: {q: search},
             success: function(response){
                             $('#users-table').html(response)

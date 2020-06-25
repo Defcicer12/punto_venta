@@ -46,7 +46,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('product/modal-edit', ['as' => 'components.product-edit-modal', 'uses' => 'ComponentsController@productEditModal']);
     Route::get('refund/modal-edit', ['as' => 'components.refund-edit-modal', 'uses' => 'ComponentsController@refundEditModal']);
     Route::get('refund/table-search', ['as' => 'components.refund-table-search', 'uses' => 'ComponentsController@refundtableSearch']);
-
+    Route::get('client/select', ['as' => 'components.client-select', 'uses' => 'ComponentsController@clientSelect']);
+    Route::post('client/select', ['as' => 'components.sale-totals', 'uses' => 'ComponentsController@saleTotals']);
+    Route::get('product/table', ['as' => 'components.products-table', 'uses' => 'ComponentsController@productTable']);
 });
 
 Route::group(['middleware' => 'auth'], function () {
@@ -59,8 +61,9 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 Route::group(['middleware' => 'auth'], function () {
-	Route::get('product', ['as' => 'product.edit', 'uses' => 'ProductosController@edit']);
-    Route::put('product', ['as' => 'product.update', 'uses' => 'ProductosController@update']);
+    Route::post('product', ['as' => 'product.create', 'uses' => 'ProductosController@addProducto']);
+	Route::get('product/edit', ['as' => 'product.edit', 'uses' => 'ProductosController@edit']);
+    Route::put('product/update', ['as' => 'product.update', 'uses' => 'ProductosController@update']);
     Route::get('product/search', ['as' => 'product.search', 'uses' => 'ProductosController@search']);
     Route::get('product/searchw', ['as' => 'product.searchw', 'uses' => 'ProductosController@searchWithoutReload']);
 	Route::put('product/password', ['as' => 'product.password', 'uses' => 'ProductosController@password']);
@@ -73,6 +76,15 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('client/searchw', ['as' => 'client.searchw', 'uses' => 'ClienteController@searchWithoutReload']);
     Route::put('client/password', ['as' => 'client.password', 'uses' => 'ClienteController@password']);
     Route::post('client/create', ['as' => 'client.create', 'uses' => 'ClienteController@addCliente']);
+});
+
+Route::group(['middleware' => 'auth'], function () {
+	Route::get('movement', ['as' => 'movement.edit', 'uses' => 'Movimiento_inventarioController@edit']);
+    Route::put('movement', ['as' => 'movement.update', 'uses' => 'Movimiento_inventarioController@update']);
+    Route::get('movement/search', ['as' => 'movement.search', 'uses' => 'Movimiento_inventarioController@search']);
+    Route::get('movement/searchw', ['as' => 'movement.searchw', 'uses' => 'Movimiento_inventarioController@searchWithoutReload']);
+    Route::put('movement/password', ['as' => 'movement.password', 'uses' => 'Movimiento_inventarioController@password']);
+    Route::post('movement/create', ['as' => 'movement.create', 'uses' => 'Movimiento_inventarioController@addMovimiento']);
 });
 
 Route::group(['middleware' => 'auth'], function () {

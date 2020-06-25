@@ -38,12 +38,9 @@ class ProductosController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'nombre' => ['required', 'string', 'max:255'],
+            'nombre' => ['required', 'string', 'max:45'],
             'precio' => ['required', 'numeric'],
-            'id_proveedor' => ['required', 'numeric', 'exists:proveedor,id'],
-            'existencia' => ['required', 'numeric', 'lt:cantidad_maxima'],
-            'cantidad_minima' => ['required', 'numeric', 'lt:cantidad_maxima'],
-            'cantidad_maxima' => ['required', 'numeric','gt:cantidad_minima'],
+            'descripción' => ['nullable', 'string', 'max:45'],
         ]);
     }
 
@@ -58,27 +55,26 @@ class ProductosController extends Controller
         return Productos::create([
             'nombre' => $data['nombre'],
             'precio' => $data['precio'],
-            'id_proveedor' => $data['id_proveedor'],
-            'existencia' => $data['existencia'],
-            'cantidad_minima' => $data['telefono'],
-            'cantidad_maxima' => $data['cantidad_maxima']
+            'descripcion' => $data['descripcion'],
         ]);
     }
 
     public function addProducto(Request $request)
     {
         $validator = $this->validator($request->all());
-        //return $validator->errors();
+
         if ($validator->fails()) {
-            return redirect()->to('/create_productos')
-            ->withErrors($validator->errors())
-            ->withInput($request->all());
+            session()->flashInput($request->all());
+            return view('products\components\create-form')
+            ->withErrors($validator->errors());
         }
 
-        $user = $this->create($request->all());
+        $pago = $this->create($request->all());
 
-        return $this->registered($request, $user)
-                        ?: redirect($this->redirectPath());
+        session()->flashInput($request->all());
+        session()->flash('status','Insumo creado correctamente');
+
+        return view('products\components\create-form');
     }
 
     /**
@@ -97,11 +93,24 @@ class ProductosController extends Controller
      * @param  \App\Http\Requests\ProfileRequest  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(ProfileRequest $request)
+    public function update(Request $request)
     {
-        auth()->user()->update($request->all());
 
-        return back()->withStatus(__('Profile successfully updated.'));
+
+        $validator = $this->validator($request->all());
+
+        if ($validator->fails()) {
+            session()->flashInput($request->all());
+            return view('products\components\edit-profile-form')
+            ->withErrors($validator->errors());
+        }
+
+        $pago = Productos::whereId($request->get('id'))->update($request->except('_token','_method'));
+
+        session()->flashInput($request->all());
+        session()->flash('status','Insumo modificado correctamente');
+
+        return view('products\components\edit-profile-form');
     }
 
     public function search(Request $request)

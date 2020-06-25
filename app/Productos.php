@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Productos extends Model
 {
 
-    protected $table = 'producto';
+    protected $table = 'insumo';
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
     public $timestamps = false;
@@ -19,10 +19,7 @@ class Productos extends Model
     protected $fillable = [
         'nombre',
         'precio',
-        'id_proveedor',
-        'existencia',
-        'cantidad_minima',
-        'cantidad_maxima',
+        'descripcion',
     ];
 
 }

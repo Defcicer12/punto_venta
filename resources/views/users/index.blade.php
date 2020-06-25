@@ -10,13 +10,13 @@
                             <div class="card-header">
                                 <div class="row">
                                     <div class="col-2">
-                                        <h4 class="card-title">Users</h4>
+                                        <h4 class="card-title">Empleado</h4>
                                     </div>
                                     <div class="col-8">
-                                        <input type="text" class="form-control" name="q" id="q" placeholder="Buscar productos" onkeyup="searchWithoutReload()">
+                                        <input type="text" class="form-control" name="q" id="q" placeholder="Buscar Empleado" onkeyup="searchWithoutReload()">
                                     </div>
                                     <div class="col">
-                                        <button type="button" id="clientes" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#clientes-modal-create">Añadir usuario</button>
+                                        <button type="button" id="clientes" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#clientes-modal-create">Añadir Empleado</button>
                                     </div>
                                 </div>
                             </div>
@@ -28,7 +28,7 @@
                                             <tr>
                                                 <th scope="col">Nombre</th>
                                                 <th scope="col">Email</th>
-                                                <th scope="col">Departamento</th>
+                                                <th scope="col">Tipo</th>
                                                 <th scope="col">Telefono</th>
                                                 <th scope="col">Acciones</th>
                                             </tr>

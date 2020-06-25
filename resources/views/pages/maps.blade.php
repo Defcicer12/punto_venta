@@ -46,8 +46,12 @@
                         </th>
                     </thead>
                     <tbody id="t-body">
+
                     </tbody>
                 </table>
+                <div id="totales" style="text-align: center">
+
+                </div>
             </div>
         </div>
         <div class="card">
@@ -55,17 +59,10 @@
                 <h5 class="title">{{ __('Agregar cliente') }}</h5>
             </div>
             <div class="card-body">
-                <div class="form-group{{ $errors->has('name') ? ' has-danger' : '' }}">
-                    <label>{{ __('Name') }}</label>
-                    <select type="text" name="name" class="form-control" id="select-cliente">
-                        <option style="color:white; background-color:#27293D;" value="1"selected>Cliente</option>
-                        @foreach ($clientes as $cliente)
-                            <option style="color:white; background-color:#27293D;" value="{{$cliente->id}}">{{$cliente->nombre}}</option>
-                        @endforeach
-                    </select>
-                    @include('alerts.feedback', ['field' => 'name'])
-                </div>
+            <div id="load-select">
+                @include('pages\components\clients-select')
             </div>
+
             <div class="card-footer">
                 <button id="confirmar" type="submit" onclick="Confirmar()" class="btn btn-sm btn-primary">{{ __('Confirmar Venta') }}</button>
                 <button id="cerrar" onclick="Cerrar()" class="btn btn-sm btn-primary">{{ __('Cerrar Venta') }}</button>
@@ -145,17 +142,15 @@
     <div class="modal-dialog" role="document" >
         <div class="modal-content" >
         <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">clientes</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Clientes</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
         </div>
         <tbody id="t-body-clientes" class="modal-body">
-            @include('pages.modal.clients.modal')
+            @include('pages\modal\clients-modal')
         </tbody>
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
         </div>
         </div>
     </div>
@@ -165,6 +160,7 @@
     productos_agregados = [];
     pagos_agregados = [];
     venta = [];
+    precio_venta = 0;
     contador_pagos = 1;
 
     function addProducto(producto) {
@@ -184,16 +180,45 @@
                             $`+producto.precio+`
                         </td>
                         <td class="text-primary" style="width: 10%;">
-                            <input type="number" value="1" class="form-control" name="cantidad`+producto.id+`">
+                            <input type="number" value="1" class="form-control" onchange="totales()" name="cantidad`+producto.id+`">
                         </td>
                     </tr>`
             $('#' + producto.id).css('border-width', "5px");
             $('#t-body').append(html);
+            totales();
         }else{
             delete productos_agregados['prod'+producto.id];
             $('#' + producto.id).css('border-width', "1px");
             $( ".tr-"+producto.id ).remove();
         }
+    }
+
+    async function totales()
+    {
+        subtotal = 0;
+        for (var key in productos_agregados) {
+            productos_agregados[key].cantidad  = await $('input[name ="cantidad'+productos_agregados[key].id+'"]').val();
+            subtotal += productos_agregados[key].precio * productos_agregados[key].cantidad;
+            subtotal = subtotal;
+            iva = subtotal * 0.16;
+            precio_venta = subtotal+iva;
+        }
+        renderTotales(subtotal);
+    }
+
+    async function renderTotales(subtotal){
+        await $.ajax({
+            type: "post",
+            url: "{{ route('components.sale-totals') }}",
+            data:{
+            _token: "{{ csrf_token() }}",
+            subtotal: subtotal
+            },
+            success: function(response){
+                            $('#totales').html(response)
+
+                        }
+        });
     }
 
     function hideElement(){
@@ -248,6 +273,7 @@
                 id_empleado: "{{ Auth::user()->id }}",
                 id_cliente: $("#select-cliente option:selected").val(),
                 productos: productos,
+                precio: precio_venta,
                     },
             success: function(response){
                 console.log(response)
