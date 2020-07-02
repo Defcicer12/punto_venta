@@ -1,162 +1,76 @@
-@extends('layouts.app', ['page' => __('Caja'), 'pageSlug' => 'caja'])
+@extends('layouts.app', ['page' => __('Orden de servicio'), 'pageSlug' => 'caja'])
 
 @section('content')
 <div class="row">
     <div class="col-lg-12">
-        <div class="card" id= "products-card">
-            <div class="card-header">
-                <h5 class="title">{{ __('Productos') }}</h5>
-            </div>
-                <div class="card-body">
-                    @csrf
-                    <button type="submit" id="search" class="btn btn-sm btn-primary" onclick="searchWithoutReload()" style="position: absolute;
-                        right: 10px;
-                        top: 5px;
-                        margin-right: 10px;">
-                        <a class="tim-icons icon-zoom-split"></a>
-                    </button>
-                    <input type="text" class="form-control" name="q" id="q" placeholder="Buscar productos por nombre" onkeyup="searchWithoutReload()">
-                </div>
-                <div class="row" style="position: relative;padding-left: 30px;margin-right: 2.2%;" id="product-selection">
-                    @include('pages.components.select-products-table')
-                </div>
-
-        </div>
         <div class="card">
             <div class="card-header">
-                <h5 class="title">{{ __('Productos Agregados') }}</h5>
-            </div>
-            <div class="table-responsive" id="tabla-agregados">
-                <table class="table">
-                    <thead class=" text-primary">
-                        <th>
-                            ID
-                        </th>
-                        <th>
-                            Nombre
-                        </th>
-                        <th>
-                            Existencia
-                        </th>
-                        <th>
-                            Precio
-                        </th>
-                        <th>
-                            Cantidad
-                        </th>
-                    </thead>
-                    <tbody id="t-body">
-
-                    </tbody>
-                </table>
-                <div id="totales" style="text-align: center">
-
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-header">
-                <h5 class="title">{{ __('Agregar cliente') }}</h5>
+                <h5 class="title">{{ __('Agregar cliente') }} <span id='ct' ></span></h5></h5>
             </div>
             <div class="card-body">
+            <form id="order-info">
+                @csrf
+                <div id="load-select">
+                    @include('pages\components\clients-select')
+                </div>
+
+                <div class="card-footer" id="client-fill">
+                    @include('pages\components\clients-fill')
+                </div>
+
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h5 class="title">{{ __('Datos de equipo') }}</h5></h5>
+        </div>
+        <div class="card-body">
+            <div class="input-group{{ $errors->has('equipo') ? ' has-danger' : '' }}">
+
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        <i class="tim-icons icon-laptop"></i>
+                    </div>
+                </div>
+                <input type="email" id="equipo" name="equipo" class="form-control{{ $errors->has('equipo') ? ' is-invalid' : '' }}" placeholder="{{ __('Equipo') }}" value="{{ old('equipo', '') }}">
+                @include('alerts.feedback', ['field' => 'equipo'])
+            </div>
+            <div class="input-group{{ $errors->has('falla') ? ' has-danger' : '' }}">
+
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        <i class="tim-icons icon-settings"></i>
+                    </div>
+                </div>
+                <input type="email" id="falla" name="falla" class="form-control{{ $errors->has('falla') ? ' is-invalid' : '' }}" placeholder="{{ __('Falla del equipo') }}" value="{{ old('falla', '') }}">
+                @include('alerts.feedback', ['field' => 'falla'])
+            </div>
+
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h5 class="title">{{ __('Agregar técnico') }} <span id='ct' ></span></h5></h5>
+        </div>
+        <div class="card-body">
+
             <div id="load-select">
-                @include('pages\components\clients-select')
+                @include('pages\components\tecnico-select')
             </div>
 
-            <div class="card-footer">
-                <button id="confirmar" type="submit" onclick="Confirmar()" class="btn btn-sm btn-primary">{{ __('Confirmar Venta') }}</button>
-                <button id="cerrar" onclick="Cerrar()" class="btn btn-sm btn-primary">{{ __('Cerrar Venta') }}</button>
-                <button type="button" id="pagos" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#exampleModal">Registrar pagos</button>
-                <button type="button" id="clientes" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#clientes-modal">Nuevo cliente</button>
-                <button type="button" id="cancelar" onclick="cancelar()" class="btn btn-sm btn-primary">{{ __('Cancelar') }}</button>
+            <div class="card-footer" id="tecnico-fill">
+                @include('pages\components\tecnico-fill')
             </div>
-        </div>
+            <button onclick="capturarOrden()" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#clientes-modal-create">Añadir insumo</button>
+        </form>
     </div>
 </div>
-<!-- Modal -->
-<div class="modal modal-black fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
-    <div class="modal-dialog" role="document" >
-        <div class="modal-content" >
-            <div class="modal-header">
-                <h5 class="modal-title" id="labelpagos">Pagos</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form method="post" action="{{ route('payment.create') }}" autocomplete="off" id="form">
 
-                    @csrf
-                    @method('post')
-
-                    @include('alerts.success')
-
-                    <div class="form-group{{ $errors->has('name') ? ' has-danger' : '' }}">
-                        <label>{{ __('Tipo') }}</label>
-                        <select type="text" id="tipo-pago" name="tipo" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ __('Tipo') }}" value="{{ old('name', auth()->user()->name) }}">
-                        <option style="color:white; background-color:#27293D;" selected>Tipo</option>
-                        <option style="color:white; background-color:#27293D;" value="Efectivo">Efectivo</option>
-                        <option style="color:white; background-color:#27293D;" value="Con tarjeta">Con tarjeta</option>
-                        <option style="color:white; background-color:#27293D;" value="Credito en tienda">Credito en tienda</option>
-                        </select>
-                        @include('alerts.feedback', ['field' => 'name'])
-                    </div>
-
-                    <div class="form-group{{ $errors->has('monto') ? ' has-danger' : '' }}" id="pago-monto">
-                        <label>{{ __('Monto') }}</label>
-                        <input type="number" id="monto-pago" name="monto" class="form-control{{ $errors->has('monto') ? ' is-invalid' : '' }}" placeholder="{{ __('Monto') }}" value="{{ old('monto', auth()->user()->monto) }}">
-                        @include('alerts.feedback', ['field' => 'monto'])
-                    </div>
-            </div>
-            <div class="table-responsive" style="margin-left: 20px">
-                <table class="table">
-                    <thead class=" text-primary">
-                        <th>
-                            ID
-                        </th>
-                        <th>
-                            Tipo
-                        </th>
-                        <th>
-                            Monto
-                        </th>
-                        <th>
-                            Fecha
-                        </th>
-                    </thead>
-                    <tbody id="t-body-pagos">
-                        @include('pages.components.payments-table')
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" onclick="mostrarPagos()" class="btn btn-fill btn-primary">{{ __('Save') }}</button>
-                </form>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Modal2 -->
-<div class="modal modal-black fade" id="clientes-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
-    <div class="modal-dialog" role="document" >
-        <div class="modal-content" >
-        <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Clientes</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <tbody id="t-body-clientes" class="modal-body">
-            @include('pages\modal\clients-modal')
-        </tbody>
-        <div class="modal-footer">
-        </div>
-        </div>
-    </div>
-</div>
 <script>
     window.onload = hideElement;
+    window.onload = display_ct;
     productos_agregados = [];
     pagos_agregados = [];
     venta = [];
@@ -216,6 +130,78 @@
             },
             success: function(response){
                             $('#totales').html(response)
+
+                        }
+        });
+    }
+
+    async function reloadFill(){
+        await $.ajax({
+            type: "post",
+            url: "{{ route('components.client-fill') }}",
+            data:{
+            _token: "{{ csrf_token() }}",
+            id: $("#select-cliente option:selected").val()
+            },
+            success: function(response){
+                            $('#client-fill').html(response)
+
+                        }
+        });
+        console.log(await $('#order-info').serialize());
+    }
+
+    async function capturarOrden(){
+        order = await $('#order-info').serialize();
+        await $.ajax({
+            type: "post",
+            url: "{{ route('orden.create') }}",
+            data: order,
+            success: function(response){
+                            if(response['error'])
+                            {
+                                showNotification(response['message'],'danger');
+                            }else{
+                                showNotification(response['message'],'success');
+                                generarTicket(response['new']);
+                                setTimeout(() => {
+                                    window.location.replace("{{ route('pages.maps') }}");
+                                }, 4000);
+                            }
+
+                        }
+        });
+    }
+
+    async function generarTicket(id){
+        url = "http://punto_venta.test/pdf/ticket-cliente/"+id;
+        window.open(url);
+    }
+
+    function downloadFile(response) {
+        var blob = new Blob([response], {type: 'application/pdf'})
+        console.log(blob);
+        var link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = 'ticket';
+        document.body.appendChild(link);
+
+        link.click();
+
+        document.body.removeChild(link);
+
+    }
+
+    async function reloadTecnicoFill(){
+        await $.ajax({
+            type: "post",
+            url: "{{ route('components.tecnico-fill') }}",
+            data:{
+            _token: "{{ csrf_token() }}",
+            id: $("#select-tecnico option:selected").val()
+            },
+            success: function(response){
+                            $('#tecnico-fill').html(response)
 
                         }
         });
@@ -409,7 +395,21 @@
             return false;
     }
     return true;
-}
+    }
 
 </script>
+
 @endsection
+
+<script type="text/javascript">
+    function display_c(){
+    var refresh=1000; // Refresh rate in milli seconds
+    mytime=setTimeout('display_ct()',refresh)
+    }
+
+    function display_ct() {
+    var x = new Date().toLocaleString('es-MX',{timeZone: "America/Mexico_City"});
+    document.getElementById('ct').innerHTML = x;
+    display_c();
+     }
+</script>

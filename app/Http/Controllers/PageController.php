@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Cliente;
 use App\Movimiento_inventario;
+use App\Orden_servicio;
 use App\Pago;
 use App\Productos;
 use App\User;
@@ -29,7 +30,7 @@ class PageController extends Controller
     public function maps()
     {
         return view('pages.maps',[
-            'productos' => Productos::all(),
+            'tecnicos' => User::where('tipo','Técnico')->get(),
             'clientes' => Cliente::all(),
             'empleado' => auth()->user()
         ]);
@@ -102,7 +103,7 @@ class PageController extends Controller
 
     public function refunds()
     {
-        return view('refunds.index',['sales' => Venta::all()]);
+        return view('refunds.index',['orders' => Orden_servicio::all(),'products' => Productos::all()]);
     }
 
     public function inventory()

@@ -1,11 +1,17 @@
-<div class="card" id="register-card">
-    <form class="form" method="patch" action="{{ route('register-users') }}" id="create-form">
-    @include('refunds.components.create-form')
-    </form>
-</div>
+@isset($orden)
+
+    <div class="card" id="register-card">
+        <form class="form" method="patch" action="{{ route('register-users') }}" id="close-form">
+        <div id="id-close-fill">
+        @include('refunds.components.id-close-fill')
+        </div>
+        @include('refunds.components.edit-close-form')
+        </form>
+    </div>
+@endisset
 <script>
     async function agregarInsumo(){
-        data  = await $('#create-form').serialize();
+        data  = await $('#close-form').serialize();
         console.log(data);
         await $.ajax({
             type: "POST",

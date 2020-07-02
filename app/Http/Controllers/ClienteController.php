@@ -82,24 +82,35 @@ class ClienteController extends Controller
      */
     public function update(Request $request)
     {
-        Cliente::whereId($request->get('id_venta'))->update($request->all());
+        $validator = $this->validator($request->all());
 
-        return back()->withStatus(__('Client successfully updated.'));
+        if ($validator->fails()) {
+            session()->flashInput($request->all());
+            return view('clients\components\edit-profile-form')
+            ->withErrors($validator->errors());
+        }
+
+        $pago = Cliente::whereId($request->get('id'))->update($request->except('_token','_method'));
+
+        session()->flashInput($request->all());
+        session()->flash('status','Insumo modificado correctamente');
+
+        return view('clients\components\edit-profile-form');
     }
 
-    public function search(Request $r)
+    public function search(Request $request)
     {
-        $data= $r->all();
-        $ventas = Cliente::where('id_venta',$data['id_venta'])->get();
-        if(count($ventas) > 0)
-            return view('pages.maps',['ventas' => $ventas]);
-        else return view ('pages.maps')->withMessage('No Details found. Try to search again !');
+        $q= $request->get('q');
+        $clients = Cliente::where('nombre','LIKE','%'.$q.'%')->get();
+        if(count($clients) > 0)
+            return compact('clients');
+        else return view ('clients\components\clients-table')->withMessage('No Details found. Try to search again !');
     }
 
-    public function searchWithoutReload(Request $r)
+    public function searchWithoutReload(Request $request)
     {
-        $data= $r->all();
-        $pagos = Cliente::where('id_venta',$data['id_venta'])->get();
-        return view('pages.components.payments-table',compact('pagos'));
+        $q= $request->get('q');
+        $clients = Cliente::where('nombre','LIKE','%'.$q.'%')->get();
+        return view('pages.components.select-products-table',compact('clients'));
     }
 }

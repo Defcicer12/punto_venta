@@ -89,7 +89,7 @@
         search  = await $('#q').val();
         await $.ajax({
             type: "GET",
-            url: "{{ route('user.components.users-table') }}",
+            url: "{{ route('client.search') }}",
             data: {q: search},
             success: function(response){
                             $('#users-table').html(response)
@@ -111,7 +111,7 @@
     async function reloadTable(){
         await $.ajax({
             type: "GET",
-            url: "{{ route('user.components.users-table') }}",
+            url: "{{ route('components.client-table') }}",
             data: {q: ''},
             success: function(response){
                             $('#users-table').html(response)

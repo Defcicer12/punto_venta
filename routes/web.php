@@ -47,8 +47,17 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('refund/modal-edit', ['as' => 'components.refund-edit-modal', 'uses' => 'ComponentsController@refundEditModal']);
     Route::get('refund/table-search', ['as' => 'components.refund-table-search', 'uses' => 'ComponentsController@refundtableSearch']);
     Route::get('client/select', ['as' => 'components.client-select', 'uses' => 'ComponentsController@clientSelect']);
+    Route::get('client/table', ['as' => 'components.client-table', 'uses' => 'ComponentsController@clientTable']);
     Route::post('client/select', ['as' => 'components.sale-totals', 'uses' => 'ComponentsController@saleTotals']);
     Route::get('product/table', ['as' => 'components.products-table', 'uses' => 'ComponentsController@productTable']);
+    Route::post('order/client-fill', ['as' => 'components.client-fill', 'uses' => 'ComponentsController@clientFill']);
+    Route::post('order/tecnico-fill', ['as' => 'components.tecnico-fill', 'uses' => 'ComponentsController@tecnicoFill']);
+    Route::post('order/tecnico-diagnostico', ['as' => 'components.refund-diagnostico', 'uses' => 'ComponentsController@diagnosticoForm']);
+    Route::post('order/tecnico-concluido', ['as' => 'components.refund-concluido', 'uses' => 'ComponentsController@concluidoForm']);
+    Route::post('order/tecnico-close', ['as' => 'components.refund-close', 'uses' => 'ComponentsController@closeForm']);
+    Route::post('order/table', ['as' => 'components.refund-table', 'uses' => 'ComponentsController@refundsTable']);
+    Route::post('product/fill', ['as' => 'components.products-fill', 'uses' => 'ComponentsController@productsFill']);
+    Route::post('product/orders-prods', ['as' => 'components.order-products-table', 'uses' => 'ComponentsController@ordersProducts']);
 });
 
 Route::group(['middleware' => 'auth'], function () {
@@ -70,12 +79,31 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 Route::group(['middleware' => 'auth'], function () {
+    Route::post('orden', ['as' => 'orden.create', 'uses' => 'Orden_servicioController@addOrdenServicio']);
+	Route::get('orden/edit', ['as' => 'orden.edit', 'uses' => 'Orden_servicioController@edit']);
+    Route::put('orden/update', ['as' => 'orden.update', 'uses' => 'Orden_servicioController@update']);
+    Route::get('orden/search', ['as' => 'orden.search', 'uses' => 'Orden_servicioController@search']);
+    Route::get('orden/searchw', ['as' => 'orden.searchw', 'uses' => 'Orden_servicioController@searchWithoutReload']);
+    Route::put('orden/diagnosticar', ['as' => 'orden.diagnosticar', 'uses' => 'Orden_servicioController@diagnosticar']);
+    Route::put('orden/pendiente', ['as' => 'orden.pendiente', 'uses' => 'Orden_servicioController@pendiente']);
+    Route::put('orden/reparacion', ['as' => 'orden.reparacion', 'uses' => 'Orden_servicioController@reparacion']);
+    Route::put('orden/concluir', ['as' => 'orden.concluir', 'uses' => 'Orden_servicioController@concluir']);
+    Route::put('orden/cerrar', ['as' => 'orden.cerrar', 'uses' => 'Orden_servicioController@cerrar']);
+    Route::post('orden/insumo', ['as' => 'orden.insumo', 'uses' => 'Orden_insumoController@addOrdenInsumo']);
+});
+
+Route::group(['middleware' => 'auth'], function () {
+	Route::get('pdf/ticket-cliente/{id}', ['as' => 'ticket.cliente', 'uses' => 'PDFController@ticketCliente']);
+});
+
+Route::group(['middleware' => 'auth'], function () {
 	Route::get('client', ['as' => 'client.edit', 'uses' => 'ClienteController@edit']);
     Route::put('client', ['as' => 'client.update', 'uses' => 'ClienteController@update']);
     Route::get('client/search', ['as' => 'client.search', 'uses' => 'ClienteController@search']);
     Route::get('client/searchw', ['as' => 'client.searchw', 'uses' => 'ClienteController@searchWithoutReload']);
     Route::put('client/password', ['as' => 'client.password', 'uses' => 'ClienteController@password']);
     Route::post('client/create', ['as' => 'client.create', 'uses' => 'ClienteController@addCliente']);
+    Route::put('client/update', ['as' => 'client.update', 'uses' => 'ClienteController@update']);
 });
 
 Route::group(['middleware' => 'auth'], function () {

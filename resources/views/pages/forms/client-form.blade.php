@@ -47,6 +47,6 @@
         <input type="text" name="rfc" class="form-control{{ $errors->has('rfc') ? ' is-invalid' : '' }}" placeholder="{{ __('Rfc') }}" value="{{ old('rfc', '') }}">
         @include('alerts.feedback', ['field' => 'rfc'])
     </div>
-<button type="button" class="btn btn-fill btn-primary" onclick="crearCliente()">{{ __('Crear cliente') }}</button>
+<button type="button" class="btn btn-fill btn-primary" onclick="crearUsuario()">{{ __('Crear cliente') }}</button>
 
 </div>

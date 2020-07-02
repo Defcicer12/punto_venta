@@ -1,4 +1,4 @@
-@extends('layouts.app', ['page' => __('Devoluciones'), 'pageSlug' => 'devoluciones'])
+@extends('layouts.app', ['page' => __('Ordenes'), 'pageSlug' => 'devoluciones'])
 
 @section('content')
 <body class="">
@@ -10,13 +10,12 @@
                             <div class="card-header">
                                 <div class="row">
                                     <div class="col-2">
-                                        <h4 class="card-title">Devoluciones</h4>
+                                        <h4 class="card-title">Ordenes</h4>
                                     </div>
                                     <div class="col-8">
-                                        <input type="text" class="form-control" name="q" id="q" placeholder="Buscar Venta" onkeyup="searchWithoutReload()">
+                                        <input type="text" class="form-control" name="q" id="q" placeholder="Buscar Ordenes" onkeyup="searchWithoutReload()">
                                     </div>
-                                    <div class="col" hidden>
-                                        <button type="button" id="clientes" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#clientes-modal-create">Añadir usuario</button>
+                                    <div class="col">
                                     </div>
                                 </div>
                             </div>
@@ -26,12 +25,11 @@
                                     <table class="table tablesorter ">
                                         <thead class=" text-primary">
                                             <tr>
-                                                <th scope="col">Folio</th>
+                                                <th scope="col">ID</th>
                                                 <th scope="col">Cliente</th>
                                                 <th scope="col">Empleado</th>
-                                                <th scope="col">Precio</th>
                                                 <th scope="col">Fecha</th>
-                                                <th scope="col">Estado</th>
+                                                <th scope="col">Status</th>
                                                 <th scope="col">Acciones</th>
                                             </tr>
                                         </thead>
@@ -48,6 +46,12 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-lg-12">
+                        <div class="card" id="close-create">
+                            @include('refunds.components.close-modal-create')
+                        </div>
+                    </div>
                 </div>
             </div>
     {{-- Modal --}}
@@ -55,7 +59,7 @@
         <div class="modal-dialog modal-lg" role="document" style="position: relative; bottom: 0%;">
             <div class="modal-content" >
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Usuarios</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Diagnostico</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
@@ -68,10 +72,10 @@
     </div>
     {{-- Modal2 --}}
     <div class="modal modal-black fade" id="clientes-modal-create" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document" style="position: relative; bottom: 25%;">
+        <div class="modal-dialog modal-lg" role="document" style="position: relative; bottom: 0%;">
             <div class="modal-content" >
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Usuarios</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Productos</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
@@ -82,6 +86,7 @@
             </div>
         </div>
     </div>
+
 </body>
 
 @stack('js')
@@ -91,54 +96,148 @@
         search  = await $('#q').val();
         await $.ajax({
             type: "GET",
-            url: "{{ route('components.refund-table-search') }}",
+            url: "{{ route('orden.searchw') }}",
             data: {q: search},
             success: function(response){
                             $('#users-table').html(response)
                         }
         });
     }
-    async function fillEditModal(user){
-        //searchw: http://punto_venta.test/product/searchw
-        console.log(user)
+
+    async function reloadFill(){
         await $.ajax({
-            type: "GET",
-            url: "{{ route('components.refund-edit-modal') }}",
-            data: {detalles: user},
+            type: "post",
+            url: "{{ route('components.products-fill') }}",
+            data:{
+            _token: "{{ csrf_token() }}",
+            id: $("#select-cliente option:selected").val()
+            },
             success: function(response){
-                            $('#edit-modal-body').html(response)
+                            $('#client-fill').html(response)
+
+                        }
+        });
+        console.log(await $('#order-info').serialize());
+    }
+
+    async function fillDiagnosticoModal(id){
+        console.log(id)
+        await $.ajax({
+            type: "post",
+            url: "{{ route('components.refund-diagnostico') }}",
+            data:{
+            _token: "{{ csrf_token() }}",
+            id: id},
+            success: function(response){
+                            $('#modal-edit-form').html(response)
+                        }
+        });
+    }
+
+    async function fillConcluidoModal(id){
+        console.log(id)
+        await $.ajax({
+            type: "post",
+            url: "{{ route('components.refund-concluido') }}",
+            data:{
+            _token: "{{ csrf_token() }}",
+            id: id},
+            success: function(response){
+                            $('#load-id').html(response)
+                            reloadProductsTable(id);
+                        }
+        });
+    }
+
+    async function fillCloseModal(id){
+        console.log(id)
+        await $.ajax({
+            type: "post",
+            url: "{{ route('components.refund-close') }}",
+            data:{
+            _token: "{{ csrf_token() }}",
+            id: id},
+            success: function(response){
+                            $('#close-create').html(response)
+                        }
+        });
+    }
+
+    async function pendiente(id){
+
+        await $.ajax({
+            type: "PUT",
+            url: "{{ route('orden.pendiente') }}",
+            data: {
+            _token: "{{ csrf_token() }}",
+            id: id},
+            success: function(response){
+                            reloadTable();
+                            $('#modal-edit-form').html(response)
+                        }
+        });
+    }
+
+    async function reparacion(id){
+
+        await $.ajax({
+            type: "PUT",
+            url: "{{ route('orden.reparacion') }}",
+            data: {
+            _token: "{{ csrf_token() }}",
+            id: id},
+            success: function(response){
+                            reloadTable();
+                            $('#modal-edit-form').html(response)
+                        }
+        });
+    }
+
+    async function concluir(){
+
+        await $.ajax({
+            type: "PUT",
+            url: "{{ route('orden.concluir') }}",
+            data: {
+            _token: "{{ csrf_token() }}",
+            id: $('#id_orden').val()},
+            success: function(response){
+                            reloadTable();
+                            $('#modal-edit-form').html(response)
+                        }
+        });
+    }
+
+    async function cerrar(){
+        data = $('#close-form').serialize();
+        await $.ajax({
+            type: "PUT",
+            url: "{{ route('orden.cerrar') }}",
+            data: data,
+            success: function(response){
+                            reloadTable();
+                            $('#close-create').html(response)
                         }
         });
     }
 
     async function reloadTable(){
         await $.ajax({
-            type: "GET",
-            url: "{{ route('components.refund-table-search') }}",
-            data: {q: ''},
+            type: "post",
+            url: "{{ route('components.refund-table') }}",
+            data: {
+                _token: "{{csrf_token()}}",
+                q: ''},
             success: function(response){
                             $('#users-table').html(response)
                         }
         });
     }
 
-    //notificacion
-    function showNotification(message,type) {
-    color = Math.floor((Math.random() * 4) + 1);
-
-    $.notify({
-      icon: "tim-icons icon-bell-55",
-      message: message
-
-    }, {
-      type: type,
-      timer: 5000,
-      placement: {
-        from: 'top',
-        align: 'center'
-      }
-    });
-  }
+    function showmodal()
+    {
+    $("#close-modal-create").modal("show");
+    }
 </script>
 @stack('js')
 @endsection

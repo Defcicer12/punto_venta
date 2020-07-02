@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Cliente;
 use App\Devolucion;
+use App\Orden_servicio;
 use App\Productos;
+use App\User;
 use App\Venta;
 use App\Venta_producto;
 use Symfony\Component\HttpFoundation\Request;
@@ -79,5 +81,68 @@ class ComponentsController extends Controller
         $clientes = Productos::all();
         return view('products\components\products-table',['products' => $clientes]);
     }
-
+    public function clientTable()
+    {
+        $clientes = Cliente::all();
+        return view('clients\components\clients-table',['clients' => $clientes]);
+    }
+    public function clientFill(Request $r)
+    {
+        $id = $r->get('id');
+        $selected = Cliente::whereId($id)->first();
+        return view('pages\components\clients-fill',['selected' => $selected]);
+    }
+    public function tecnicoSelect()
+    {
+        $tecnicos = User::where('tipo','Técnico');
+        return view('pages\components\tecnico-select',['tecnicos' => $tecnicos]);
+    }
+    public function tecnicoFill(Request $r)
+    {
+        $id = $r->get('id');
+        $tecnico = User::whereId($id)->first();
+        return view('pages\components\tecnico-fill',['tecnico' => $tecnico]);
+    }
+    public function diagnosticoForm(Request $r)
+    {
+        $id = $r->get('id');
+        $orden = Orden_servicio::whereId($id)->first();
+        return view('refunds\components\edit-profile-form',['orden' => $orden]);
+    }
+    public function concluidoForm(Request $r)
+    {
+        $id = $r->get('id');
+        $orden = Orden_servicio::whereId($id)->first();
+        return view('refunds\components\id-fill',['orden' => $orden, 'products'=> Productos::all()]);
+    }
+    public function closeForm(Request $r)
+    {
+        $id = $r->get('id');
+        $orden = Orden_servicio::whereId($id)->first();
+        $subtotal= 0;
+        foreach ($orden->insumos as $insumo) {
+            $subtotal += $insumo->cantidad * $insumo->precio;
+        }
+        return view('refunds\components\close-modal-create',['orden' => $orden, 'products'=> Productos::all(),'subtotal'=>$subtotal]);
+    }
+    public function refundsTable()
+    {
+        return view('refunds\components\refunds-table',['orders' => Orden_servicio::all()]);
+    }
+    public function productsFill(Request $r)
+    {
+        $id = $r->get('id');
+        $selected = Productos::whereId($id)->first();
+        return view('refunds\components\products-fill',['selected' => $selected]);
+    }
+    public function ordersProducts(Request $r)
+    {
+        $id = $r->get('id');
+        $order = Orden_servicio::whereId($id)->first();
+        $subtotal= 0;
+        foreach ($order->insumos as $insumo) {
+            $subtotal += $insumo->cantidad * $insumo->precio;
+        }
+        return view('refunds\components\order-products-table',['order' => $order,'subtotal' => $subtotal]);
+    }
 }
