@@ -93,7 +93,8 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 Route::group(['middleware' => 'auth'], function () {
-	Route::get('pdf/ticket-cliente/{id}', ['as' => 'ticket.cliente', 'uses' => 'PDFController@ticketCliente']);
+    Route::get('pdf/ticket-cliente/{id}', ['as' => 'ticket.cliente', 'uses' => 'PDFController@ticketCliente']);
+    Route::get('pdf/ticket-pago/{id}', ['as' => 'ticket.pago', 'uses' => 'PDFController@ticketPago']);
 });
 
 Route::group(['middleware' => 'auth'], function () {

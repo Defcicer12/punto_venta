@@ -78,7 +78,10 @@ class Orden_insumoController extends Controller
             session()->flashInput($request->all());
             return ['error'=>1,'message' => $validator->errors()->first()];
         }
-
+        if(Orden_insumo::where('id_orden',$request->get('id_orden'))->where('id_insumo',$request->get('id_insumo'))->count())
+        {
+            return ['error'=>1,'message' => 'Este insumo ya ha sido capturado'];
+        }
         $new = $this->create($request->all());
 
         session()->flashInput($request->all());

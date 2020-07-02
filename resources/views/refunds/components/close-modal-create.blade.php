@@ -4,31 +4,38 @@
         <form class="form" method="patch" action="{{ route('register-users') }}" id="close-form">
         <div id="id-close-fill">
         @include('refunds.components.id-close-fill')
-        </div>
+        </div id="close-form1">
         @include('refunds.components.edit-close-form')
         </form>
     </div>
 @endisset
 <script>
-    async function agregarInsumo(){
-        data  = await $('#close-form').serialize();
-        console.log(data);
+
+    async function cerrar(){
+        console.log($('#close-create').get());
+        data = $('#close-form').serialize();
+        id = $('#close-form').find('input[name="id"]').val();
+        console.log(id);
         await $.ajax({
-            type: "POST",
-            url: "{{ route('orden.insumo') }}",
+            type: "PUT",
+            url: "{{ route('orden.cerrar') }}",
             data: data,
             success: function(response){
-                            if (response['error']) {
-                                showNotification(response['message'],'danger')
+                if (response['error']) {
+                                $('#close-create').html(response['html']);
                             } else {
-                                showNotification(response['message'],'success')
-                                reloadProductsTable(response['new']);
 
+                                $('#close-create').html(response['html']);
+                                reloadTable();
+                                generarTicket(id);
                             }
-
-
                         }
         });
+    }
+
+    async function generarTicket(id){
+        url = "http://punto_venta.test/pdf/ticket-pago/"+id;
+        window.open(url);
     }
 
     async function reloadProductsTable(id){

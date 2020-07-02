@@ -19,4 +19,15 @@ class PDFController extends Controller
         $pdf = \PDF::loadView('ticket-cliente',['orden' => $orden ])->save(public_path('Alta-servicio.pdf'))->setPaper('legal', 'portrait');
         return response()->download(public_path('Alta-servicio.pdf'));
     }
+
+    public function ticketPago($id)
+    {
+        $orden = Orden_servicio::whereId($id)->first();
+        $subtotal= $orden->costo_servicio;
+        foreach ($orden->insumos as $insumo) {
+            $subtotal += $insumo->cantidad * $insumo->precio;
+        }
+        $pdf = \PDF::loadView('ticket-pago',['orden' => $orden ,'subtotal' => $subtotal])->save(public_path('Ticket-pago.pdf'))->setPaper('legal', 'portrait');
+        return response()->download(public_path('Ticket-pago.pdf'));
+    }
 }

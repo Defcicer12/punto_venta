@@ -173,7 +173,7 @@
             id: id},
             success: function(response){
                             reloadTable();
-                            $('#modal-edit-form').html(response)
+
                         }
         });
     }
@@ -188,7 +188,7 @@
             id: id},
             success: function(response){
                             reloadTable();
-                            $('#modal-edit-form').html(response)
+
                         }
         });
     }
@@ -203,23 +203,17 @@
             id: $('#id_orden').val()},
             success: function(response){
                             reloadTable();
-                            $('#modal-edit-form').html(response)
+                            if (response['error']) {
+                                showNotification(response['message'],'danger')
+                            } else {
+                                showNotification(response['message'],'success')
+
+                            }
                         }
         });
     }
 
-    async function cerrar(){
-        data = $('#close-form').serialize();
-        await $.ajax({
-            type: "PUT",
-            url: "{{ route('orden.cerrar') }}",
-            data: data,
-            success: function(response){
-                            reloadTable();
-                            $('#close-create').html(response)
-                        }
-        });
-    }
+
 
     async function reloadTable(){
         await $.ajax({

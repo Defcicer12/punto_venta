@@ -26,9 +26,9 @@
                         @if (($order->status == "Pendiente por cliente" || $order->status == "Con diagnóstico") && auth()->user()->tipo == "Gerente")
                             <a class="dropdown-item" onclick="reparacion({{$order->id}})">Marcar para reparación</a>
                         @endif
-                        {{-- @if (($order->status == "En reparación") && auth()->user()->tipo == "Técnico") --}}
+                        @if (($order->status == "En reparación") && auth()->user()->tipo == "Técnico")
                         <a class="dropdown-item" href="#" data-toggle="modal" data-target="#clientes-modal-create" onclick="fillConcluidoModal({{$order->id}})">Concluir reparación</a>
-                        {{-- @endif --}}
+                        @endif
                         @if (($order->status == "Concluida") && auth()->user()->tipo == "Gerente")
                         <a class="dropdown-item" href="#" data-toggle="modal" data-target="#close-modal-create" onclick="fillCloseModal({{$order->id}})">Cerrar</a>
                         @endif

@@ -63,7 +63,7 @@
             <div class="card-footer" id="tecnico-fill">
                 @include('pages\components\tecnico-fill')
             </div>
-            <button onclick="capturarOrden()" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#clientes-modal-create">Añadir insumo</button>
+            <button onclick="capturarOrden()" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#clientes-modal-create">Añadir Orden</button>
         </form>
     </div>
 </div>

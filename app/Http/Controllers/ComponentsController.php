@@ -127,7 +127,11 @@ class ComponentsController extends Controller
     }
     public function refundsTable()
     {
-        return view('refunds\components\refunds-table',['orders' => Orden_servicio::all()]);
+        if(auth()->user()->tipo == "Técnico")
+            $ordenes = Orden_servicio::where('id_empleado',auth()->user()->id)->get();
+        else
+            $ordenes = Orden_servicio::all();
+        return view('refunds\components\refunds-table',['orders' => $ordenes]);
     }
     public function productsFill(Request $r)
     {

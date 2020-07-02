@@ -5,7 +5,7 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header">
-                <h5 class="title">{{ __('Agregar cliente') }} <span id='ct' ></span></h5></h5>
+                <h5 class="title">{{ __('Agregar Insumo') }} <span id='ct' ></span></h5></h5>
             </div>
             <div class="card-body">
 

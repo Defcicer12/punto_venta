@@ -103,7 +103,11 @@ class PageController extends Controller
 
     public function refunds()
     {
-        return view('refunds.index',['orders' => Orden_servicio::all(),'products' => Productos::all()]);
+        if(auth()->user()->tipo == "Técnico")
+            $ordenes = Orden_servicio::where('id_empleado',auth()->user()->id)->get();
+        else
+            $ordenes = Orden_servicio::all();
+        return view('refunds.index',['orders' => $ordenes,'products' => Productos::all()]);
     }
 
     public function inventory()

@@ -45,7 +45,7 @@ class Orden_servicioController extends Controller
     protected function validateCerrar(Array $data)
     {
         return Validator::make($data, [
-            'observaciones'=> ['nullable','max:100'],
+            'observaciones'=> ['required','max:100'],
             'costo_servicio' => ['required','numeric'],
         ]);
 
@@ -161,8 +161,8 @@ class Orden_servicioController extends Controller
 
     public function concluir(Request $request)
     {
-
-        return Orden_servicio::whereId($request->get('id'))->update(['status' =>'Concluida']);
+        Orden_servicio::whereId($request->get('id'))->update(['status' =>'Concluida']);
+        return ['error'=>0,'message' => 'Orden concluida exitosamente'];
 
     }
 
@@ -172,8 +172,9 @@ class Orden_servicioController extends Controller
 
         if ($validator->fails()) {
             session()->flashInput($request->all());
-            return view('refunds\components\edit-profile-form')
+            $view = (string)view('refunds\components\close-modal-create',['orden' => Orden_servicio::whereId($request->get('id'))->first()])
             ->withErrors($validator->errors());
+            return ['error' => 1,'html' => $view];
         }
         Orden_servicio::whereId($request->get('id'))->update(['status' =>'Cerrada','fecha_entrega' => date("Y-m-d H:i:s")]);
         $pago = Orden_servicio::whereId($request->get('id'))->update($request->except('_token','_method'));
@@ -181,6 +182,7 @@ class Orden_servicioController extends Controller
         session()->flashInput($request->all());
         session()->flash('status','Orden cerrada correctamente');
 
-        return view('refunds\components\edit-profile-form');
+        $view = (string)view('refunds\components\close-modal-create',['orden' => Orden_servicio::whereId($request->get('id'))->first()]);
+        return ['error' => 0,'html' => $view];
     }
 }

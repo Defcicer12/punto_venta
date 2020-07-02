@@ -9,7 +9,7 @@
       <div id="logo">
         <img src="{{ asset('img/logo.png') }}">
       </div>
-      <h1>INVOICE 3-2-1</h1>
+      <h1>Ticket de pago</h1>
       <div id="company" class="clearfix">
         <div>Siempre Fallan</div>
         <div>455 Foggy Heights,<br /> AZ 85004, US</div>
@@ -24,13 +24,14 @@
         <div><span>Fecha</span> {{ $orden->fecha }}</div>
         <div><span>Servicio</span> Reparación de equipo</div>
         <div><span>Falla</span> {{ $orden->falla }}</div>
+        <center style="font-size: 20px">Cargos</center>
       </div>
     </header>
     <main>
       <table>
         <thead>
           <tr>
-            <th class="service">Servicio</th>
+            <th class="service">Nombre</th>
             <th class="desc">Descripción</th>
             <th>Precio</th>
             <th>Cantidad</th>
@@ -40,22 +41,34 @@
         <tbody>
             @foreach ($orden->insumos as $insumo)
           <tr>
-            <td class="service">Reparación de equipo</td>
-          <td class="desc">{{$insumo}}</td>
-            <td class="unit">$40.00</td>
-            <td class="qty">26</td>
-            <td class="total">$1,040.00</td>
+            <td class="service">{{$insumo->insumo->nombre}}</td>
+            <td class="desc">{{$insumo->insumo->descripcion}}</td>
+            <td class="unit">{{$insumo->precio}}</td>
+            <td class="qty">{{$insumo->cantidad}}</td>
+            <td class="total">{{$insumo->cantidad * $insumo->precio}}</td>
           </tr>
           @endforeach
+          <tr>
+            <td class="service">Costo de servicio</td>
+            <td class="desc">Reparación</td>
+            <td class="unit">{{$orden->costo_servicio}}</td>
+            <td class="qty">1</td>
+            <td class="total">{{$orden->costo_servicio}}</td>
+          </tr>
+          <tr>
+            <td class="service">Subtotal:{{$subtotal}}</td>
+            <td class="desc">IVA: {{$subtotal * 0.16}}</td>
+            <td class="unit">Total {{$subtotal * 1.16}}</td>
+          </tr>
         </tbody>
       </table>
       <div id="notices">
         <div>NOTICE:</div>
-        <div class="notice">A finance charge of 1.5% will be made on unpaid balances after 30 days.</div>
+        <div class="notice">Ticket de pago.</div>
       </div>
     </main>
     <footer>
-      Invoice was created on a computer and is valid without the signature and seal.
+      Sistema siempre falla
     </footer>
   </body>
 </html>

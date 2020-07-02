@@ -18,6 +18,7 @@
       </div>
       <div id="project">
         <div><span>Compañia</span> Siempre Fallan</div>
+        <div><span>Folio</span> {{$orden->id}}</div>
         <div><span>Cliente</span> {{ $orden->cliente->nombre }}</div>
         <div><span>Empleado a cargo</span>{{ $orden->empleado->name }}</div>
         <div><span>Email</span> <a href="mailto:john@example.com">{{$orden->empleado->email}}</a></div>
