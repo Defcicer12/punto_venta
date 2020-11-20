@@ -89,7 +89,7 @@
         search  = await $('#q').val();
         await $.ajax({
             type: "GET",
-            url: "{{ route('client.search') }}",
+            url: "{{ route('client.searchw') }}",
             data: {q: search},
             success: function(response){
                             $('#users-table').html(response)

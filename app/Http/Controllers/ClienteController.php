@@ -111,6 +111,6 @@ class ClienteController extends Controller
     {
         $q= $request->get('q');
         $clients = Cliente::where('nombre','LIKE','%'.$q.'%')->get();
-        return view('pages.components.select-products-table',compact('clients'));
+        return view('clients.components.clients-table',compact('clients'));
     }
 }

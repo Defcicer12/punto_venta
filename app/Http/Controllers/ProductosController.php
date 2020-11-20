@@ -125,7 +125,7 @@ class ProductosController extends Controller
     public function searchWithoutReload(Request $request)
     {
         $q= $request->get('q');
-        $productos = Productos::where('nombre','LIKE','%'.$q.'%')->get();
-        return view('pages.components.select-products-table',compact('productos'));
+        $products = Productos::where('nombre','LIKE','%'.$q.'%')->get();
+        return view('products.components.products-table',compact('products'));
     }
 }
